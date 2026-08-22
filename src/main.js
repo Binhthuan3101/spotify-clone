@@ -119,7 +119,6 @@ if (token) {
           src="./src/assets/avatar.jpg"
           class="w-8 h-8 aspect-square object-cover rounded-full pointer-events-none"
           alt="avatar"
-          onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';"
         />
       </button>
     `;
