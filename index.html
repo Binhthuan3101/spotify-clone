@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./src/assets/favicon1.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/ff53e92e9d.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>spotify</title>
+  </head>
+  <body>
+    <div class="flex h-dvh flex-col relative overflow-hidden">
+      <header
+        class="bg-[#000] w-full flex items-center p-2 font-bold text-lg text-white relative"
+      >
+        <div class="w-full flex items-center gap-4" id="content">
+          <!-- logo -->
+          <div class="w-12 h-12 flex justify-center items-center text-4xl">
+            <a href="/" id="logo-home" title="Spotify">
+              <i class="fa-brands fa-spotify"></i>
+            </a>
+          </div>
+
+          <!-- active -->
+          <div class="" id="content-left">
+            <div class="flex justify-between items-center gap-4">
+              <div class="w-136.5 min-w-[87.5] max-w-[136.6] flex items-center">
+                <button
+                  id="home"
+                  class="flex h-12 w-12 cursor-pointer shrink-0 items-center justify-center rounded-full bg-background-card hover:bg-background-card-hover text-white hover:scale-105 transition duration-200 text-2xl"
+                >
+                  <i class="fa-solid fa-house pointer-events-none"></i>
+                </button>
+                <div class="w-full px-2 relative group">
+                  <button
+                    id="btn-search"
+                    class="absolute cursor-pointer left-5 top-1/2 -translate-y-1/2 text-background-icon group-hover:text-white group-focus-within:text-white"
+                    title="tìm kiếm"
+                  >
+                    <span><i class="fa-solid fa-magnifying-glass"></i></span>
+                  </button>
+                  <form>
+                    <input
+                      id="search"
+                      class="w-full outline-none text-base font-normal pl-11 pr-20 h-12 bg-background-card hover:bg-background-card-hover focus:ring-white focus:ring-2 rounded-full"
+                      type="text"
+                      placeholder="Bạn muốn phát nội dung gì?"
+                    />
+                  </form>
+                  <div
+                    id="search-dropdown"
+                    class="hidden absolute left-0 right-0 top-14 bg-[#282828] rounded-lg shadow-2xl border border-[#333] max-h-[70vh] overflow-y-auto z-[200]"
+                  ></div>
+                  <div
+                    class="absolute top-1/2 -translate-y-1/2 right-6 text-background-icon pl-3 border-l border-background-icon text-2xl"
+                  >
+                    <button
+                      id="brower-search"
+                      class="cursor-pointer hover:text-foreground-base"
+                    >
+                      <span>
+                        <svg
+                          class="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-center items-center gap-2">
+                <button
+                  class="text-foreground-accent text-base font-bold hover:text-white cursor-pointer"
+                  id="premium"
+                >
+                  Premium
+                </button>
+                <button
+                  class="text-foreground-accent text-base font-bold hover:text-white cursor-pointer"
+                  id="support"
+                >
+                  Hỗ trợ
+                </button>
+                <button
+                  class="text-foreground-accent text-base font-bold hover:text-white cursor-pointer"
+                  id="download"
+                >
+                  Tải xuống
+                </button>
+                <div
+                  class="w-[1px] h-6.25 m-4 bg-foreground-base"
+                  id="bar"
+                ></div>
+                <a
+                  href="#!"
+                  class="w-fit py-1 p-4 text-foreground-accent hover:text-white text-sm cursor-pointer"
+                >
+                  <span><i class="fa-regular fa-circle-down"></i></span>
+                  <span>Cài đặt Ứng dụng</span>
+                </a>
+                <div>
+                  <div
+                    class="flex items-center justify-center"
+                    id="active"
+                  ></div>
+                  <div
+                    class="hidden right-5 top-16 min-w-40 max-w-87.5 z-100 w-70 absolute rounded-xs overflow-hidden"
+                    id="menu"
+                  >
+                    <ul
+                      class="flex flex-col bg-[#282828] p-1 text-sm text-[#DEEAEA]"
+                    >
+                      <li>
+                        <a
+                          href="./src/profile.html"
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 flex justify-between items-center"
+                        >
+                          <div><span>Tài khoản</span></div>
+                          <div class="text-base">
+                            <i
+                              class="fa-solid fa-arrow-up-right-from-square"
+                            ></i>
+                          </div>
+                        </a>
+                      </li>
+                      <li>
+                        <button
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 text-left"
+                        >
+                          Hồ sơ
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 text-left"
+                        >
+                          Gần đây
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 flex justify-between items-center"
+                        >
+                          <div><span>Nâng cấp lên Premium</span></div>
+                          <div class="text-base">
+                            <i
+                              class="fa-solid fa-arrow-up-right-from-square"
+                            ></i>
+                          </div>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 flex justify-between items-center"
+                        >
+                          <div><span>Hỗ trợ</span></div>
+                          <div class="text-base">
+                            <i
+                              class="fa-solid fa-arrow-up-right-from-square"
+                            ></i>
+                          </div>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 flex justify-between items-center"
+                        >
+                          <div><span>Tải xuống</span></div>
+                          <div class="text-base">
+                            <i
+                              class="fa-solid fa-arrow-up-right-from-square"
+                            ></i>
+                          </div>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 text-left"
+                        >
+                          Cài đặt
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          id="logout"
+                          class="w-full hover:bg-[#3E3E3E] cursor-pointer pl-3 py-2 text-left"
+                        >
+                          Đăng xuất
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- main -->
+      <div class="flex flex-1 gap-2 overflow-hidden px-2">
+        <aside
+          id="desktop-left"
+          class="w-1/4 ml-2 bg-background-side rounded-md shrink-0 flex flex-col h-full"
+        >
+          <nav class="h-full flex flex-col">
+            <div class="flex flex-col h-full">
+              <!-- Header Sidebar -->
+              <div class="header-sidebar">
+                <header class="pt-4 px-4 pb-2 relative">
+                  <div class="flex gap-2 items-center justify-between">
+                    <div class="flex-1 flex items-center gap-2">
+                      <h1 class="text-base font-bold text-foreground-base">
+                        Thư viện
+                      </h1>
+                    </div>
+
+                    <!-- skill (được main.js render nút "Tạo" và "Mở rộng") -->
+                    <div class="flex gap-2 skill items-center"></div>
+
+                    <!-- Context Menu (Menu khi bấm nút Tạo) -->
+                    <div
+                      id="context-menu"
+                      class="absolute hidden top-16 bg-background-card-hover z-1000 -right-60 w-[320px] md:w-[380px] rounded-md shadow-2xl border border-[#333]"
+                    >
+                      <ul class="p-1">
+                        <!-- Option 1: Playlist -->
+                        <li class="group">
+                          <button
+                            id="btn-create-playlist"
+                            class="w-full group-hover:bg-[#3e3e3e] rounded-md py-2 text-left cursor-pointer transition-colors"
+                          >
+                            <div class="flex gap-3 p-2 items-center">
+                              <div
+                                class="w-10 h-10 flex justify-center items-center bg-[#3E3E3E] group-hover:bg-[#525252] rounded-full shrink-0"
+                              >
+                                <span
+                                  class="text-xl group-hover:rotate-12 group-hover:text-green-500 transition-transform"
+                                >
+                                  <i class="fa-brands fa-itunes-note"></i>
+                                </span>
+                              </div>
+
+                              <div class="flex flex-col items-start gap-[2px]">
+                                <span
+                                  class="text-sm font-bold text-foreground-base"
+                                >
+                                  Playlist
+                                </span>
+                                <span class="text-xs text-foreground-accent">
+                                  Tạo danh sách phát gồm các bài hát hoặc tập
+                                  podcast
+                                </span>
+                              </div>
+                            </div>
+                          </button>
+                        </li>
+
+                        <!-- Option 2: Giai điệu chung -->
+                        <li class="group">
+                          <button
+                            id="btn-create-general-melody"
+                            class="w-full group-hover:bg-[#3e3e3e] rounded-md py-2 text-left cursor-pointer transition-colors"
+                          >
+                            <div class="flex gap-3 p-2 items-center">
+                              <div
+                                class="w-10 h-10 flex justify-center items-center bg-[#3E3E3E] group-hover:bg-[#525252] rounded-full shrink-0 transition-colors duration-200"
+                              >
+                                <span
+                                  class="relative w-6 h-6 flex items-center justify-center transition-transform duration-200 group-hover:rotate-12"
+                                >
+                                  <i
+                                    class="fa-solid fa-circle text-[13px] text-green-600 absolute left-[2px] bottom-[2px] opacity-80"
+                                  ></i>
+                                  <i
+                                    class="fa-solid fa-circle text-[13px] text-[#bbf7d0] absolute right-[2px] top-[2px] mix-blend-screen group-hover:text-green-400 transition-colors duration-200"
+                                  ></i>
+                                </span>
+                              </div>
+
+                              <div class="flex flex-col items-start gap-[2px]">
+                                <span
+                                  class="text-sm font-bold text-foreground-base"
+                                >
+                                  Giai điệu chung
+                                </span>
+                                <span class="text-xs text-foreground-accent">
+                                  Tạo danh sách phát tổng hợp gu nhạc của bạn bè
+                                </span>
+                              </div>
+                            </div>
+                          </button>
+                        </li>
+
+                        <!-- Option 3: Thư mục (Đã sửa lại tiêu đề chính xác) -->
+                        <li class="group">
+                          <button
+                            id="btn-create-folder"
+                            class="w-full group-hover:bg-[#3e3e3e] rounded-md py-2 text-left cursor-pointer transition-colors"
+                          >
+                            <div class="flex gap-3 p-2 items-center">
+                              <div
+                                class="w-10 h-10 flex justify-center items-center bg-[#3E3E3E] group-hover:bg-[#525252] rounded-full shrink-0 transition-colors duration-200"
+                              >
+                                <span
+                                  class="text-xl flex items-center justify-center transition-transform duration-200 group-hover:rotate-12 group-hover:text-green-400"
+                                >
+                                  <i class="fa-regular fa-folder"></i>
+                                </span>
+                              </div>
+
+                              <div class="flex flex-col items-start gap-[2px]">
+                                <span
+                                  class="text-sm font-bold text-foreground-base"
+                                >
+                                  Thư mục danh sách phát
+                                </span>
+                                <span class="text-xs text-foreground-accent">
+                                  Sắp xếp các danh sách phát của bạn vào từng
+                                  mục
+                                </span>
+                              </div>
+                            </div>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </header>
+
+                <!-- Nút lọc Nghệ sĩ / Playlist (Được render bởi main.js khi đăng nhập) -->
+                <div class="artist flex py-2 px-4 gap-2"></div>
+              </div>
+
+              <!-- 1. SIDE CONTENT: Hiển thị khi CHƯA ĐĂNG NHẬP (Unauthenticated State) -->
+              <div
+                class="side-content flex-1 px-2 pb-2 overflow-y-auto flex flex-col"
+                id="side-content"
+              >
+                <div
+                  class="flex flex-col h-65 overflow-y-auto gap-2 scroll-smooth scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-500 transition-colors"
+                >
+                  <!-- Card 1: Tạo playlist -->
+                  <section
+                    class="py-4 px-5 my-1 flex flex-col gap-4 rounded-lg bg-background-card items-start justify-center"
+                  >
+                    <div class="flex flex-col gap-1">
+                      <span class="font-bold text-sm text-foreground-base">
+                        Tạo danh sách phát đầu tiên của bạn
+                      </span>
+                      <span class="text-xs text-foreground-base">
+                        Rất dễ! Chúng tôi sẽ giúp bạn
+                      </span>
+                    </div>
+                    <div>
+                      <button
+                        id="btn-create-first-playlist"
+                        class="rounded-full cursor-pointer text-center inline-block font-bold overflow-hidden group"
+                      >
+                        <span
+                          class="py-1.5 px-4 bg-foreground-base group-hover:bg-[#F0F0F0] text-background-base flex justify-center items-center text-xs"
+                        >
+                          Tạo danh sách phát
+                        </span>
+                      </button>
+                    </div>
+                  </section>
+
+                  <!-- Card 2: Theo dõi Podcast -->
+                  <section
+                    class="py-4 px-5 my-1 flex flex-col gap-4 rounded-lg bg-background-card items-start justify-center"
+                  >
+                    <div class="flex flex-col gap-1">
+                      <span class="font-bold text-sm text-foreground-base">
+                        Hãy cùng tìm và theo dõi một số podcast
+                      </span>
+                      <span class="text-xs text-foreground-base">
+                        Chúng tôi sẽ cập nhật cho bạn thông tin về các tập mới
+                      </span>
+                    </div>
+                    <div>
+                      <a
+                        href="#!"
+                        class="rounded-full cursor-pointer text-center inline-block font-bold overflow-hidden group"
+                      >
+                        <span
+                          class="py-1.5 px-4 bg-foreground-base group-hover:bg-[#F0F0F0] text-background-base flex justify-center items-center text-xs"
+                        >
+                          Duyệt xem podcast
+                        </span>
+                      </a>
+                    </div>
+                  </section>
+                </div>
+
+                <!-- Footer Links & Language -->
+                <div class="w-full">
+                  <div class="my-4 px-4">
+                    <ul class="flex flex-wrap gap-y-2 gap-x-4">
+                      <li class="list-none">
+                        <a
+                          class="hover:text-foreground-base text-foreground-accent no-underline font-normal text-xs"
+                          href="https://www.spotify.com/vn-vi/legal/end-user-agreement/"
+                        >
+                          Pháp lý
+                        </a>
+                      </li>
+                      <li class="list-none">
+                        <a
+                          class="hover:text-foreground-base text-foreground-accent no-underline font-normal text-xs"
+                          href="https://www.spotify.com/vn-vi/safetyandprivacy"
+                        >
+                          Trung tâm an toàn & Quyền riêng tư
+                        </a>
+                      </li>
+                      <li class="list-none">
+                        <a
+                          class="hover:text-foreground-base text-foreground-accent no-underline font-normal text-xs"
+                          href="https://www.spotify.com/vn-vi/legal/privacy-policy/"
+                        >
+                          Chính sách quyền riêng tư
+                        </a>
+                      </li>
+                      <li class="list-none">
+                        <a
+                          class="hover:text-foreground-base text-foreground-accent no-underline font-normal text-xs"
+                          href="https://www.spotify.com/vn-vi/legal/cookies-policy/"
+                        >
+                          Cookie
+                        </a>
+                      </li>
+                      <li class="list-none">
+                        <a
+                          class="hover:text-foreground-base text-foreground-accent no-underline font-normal text-xs"
+                          href="https://www.spotify.com/vn-vi/legal/privacy-policy/#s3"
+                        >
+                          Giới thiệu Quảng cáo
+                        </a>
+                      </li>
+                      <li class="list-none">
+                        <a
+                          class="hover:text-foreground-base text-foreground-accent no-underline font-normal text-xs"
+                          href="https://www.spotify.com/vn-vi/accessibility/"
+                        >
+                          Hỗ trợ tiếp cận
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Nút chọn ngôn ngữ -->
+                  <div class="mb-4 px-4">
+                    <button
+                      id="language"
+                      class="text-xs inline-flex items-center gap-2 cursor-pointer text-foreground-base border border-[#7c7c7c] hover:border-foreground-base font-bold py-1.5 px-3 rounded-full hover:scale-105 transition-transform"
+                    >
+                      <i class="fa-solid fa-globe"></i>
+                      <span>Tiếng Việt</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. SIDE ARTIST: Hiển thị khi ĐÃ ĐĂNG NHẬP (Authenticated State) -->
+              <div
+                id="side-artist"
+                class="side-artist hidden flex-1 px-2 pb-2 flex flex-col gap-2 overflow-y-auto"
+              >
+                <div class="pr-2">
+                  <div
+                    class="flex justify-between items-center gap-4 pt-[2px] px-2"
+                  >
+                    <!-- Khung tìm kiếm thu gọn/mở rộng -->
+                    <div class="relative flex items-center">
+                      <input
+                        id="search-box"
+                        class="py-[1px] px-[2px] text-xs bg-[#ffffff1a] text-white outline-none rounded-md w-0 opacity-0 transition-all duration-300 ease-linear"
+                        type="text"
+                        placeholder="Tìm kiếm trong thư viện"
+                      />
+                      <div
+                        class="search-icon flex items-center absolute pointer-events-none left-2 opacity-0 transition-opacity duration-300"
+                      >
+                        <span class="text-[#ffffffb3] text-xs">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                      </div>
+                      <button
+                        id="search-btn"
+                        class="hover:bg-[#292929] text-sm py-2 px-1.5 cursor-pointer rounded-full text-[#ffffffb3] bg-transparent flex items-center transition-colors"
+                        title="Tìm kiếm trong Thư viện"
+                      >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                      </button>
+                    </div>
+
+                    <!-- Sort option (Nút danh sách/sắp xếp gần đây) -->
+                    <div
+                      class="relative flex items-center justify-between px-3 py-2"
+                    >
+                      <!-- Nút hiển thị trạng thái: Text + Icon tự đổi theo Layout chọn -->
+                      <button
+                        id="view-options-btn"
+                        class="flex items-center gap-2 text-xs text-gray-400 hover:text-white font-medium transition cursor-pointer"
+                      >
+                        <span id="current-sort-text">Gần đây</span>
+                        <i
+                          id="current-layout-icon"
+                          class="icon-layout fa-solid fa-list-ul text-sm"
+                        ></i>
+                        <i
+                          class="icon-layout fa-solid fa-bars hidden! text-sm"
+                        ></i>
+                        <i
+                          class="icon-layout fa-solid fa-table-cells hidden! text-sm"
+                        ></i>
+                        <i
+                          class="icon-layout fa-solid fa-border-all hidden! text-sm"
+                        ></i>
+                      </button>
+
+                      <!-- Dropdown Popover Menu -->
+                      <div
+                        id="view-options-menu"
+                        class="hidden absolute right-0 top-8 w-60 bg-[#282828] text-white rounded-md shadow-2xl border border-[#383838] z-[1000] p-1.5 text-xs"
+                      >
+                        <!-- Phần 1: Sắp xếp theo -->
+                        <div
+                          class="px-2 py-1.5 text-[11px] font-bold text-gray-400"
+                        >
+                          Sắp xếp theo
+                        </div>
+                        <ul
+                          class="flex flex-col gap-0.5 border-b border-[#3e3e3e] pb-2"
+                        >
+                          <li
+                            data-sort="recent"
+                            class="sort-option flex items-center justify-between px-2 py-2 hover:bg-[#3e3e3e] rounded cursor-pointer text-green-500 font-semibold"
+                          >
+                            <span>Gần đây</span>
+                            <i class="fa-solid fa-check check-icon"></i>
+                          </li>
+                          <li
+                            data-sort="added"
+                            class="sort-option flex items-center justify-between px-2 py-2 hover:bg-[#3e3e3e] rounded cursor-pointer"
+                          >
+                            <span>Mới thêm gần đây</span>
+                            <i class="fa-solid fa-check check-icon hidden!"></i>
+                          </li>
+                          <li
+                            data-sort="alphabetical"
+                            class="sort-option flex items-center justify-between px-2 py-2 hover:bg-[#3e3e3e] rounded cursor-pointer"
+                          >
+                            <span>Thứ tự bảng chữ cái</span>
+                            <i class="fa-solid fa-check check-icon hidden!"></i>
+                          </li>
+                          <li
+                            data-sort="creator"
+                            class="sort-option flex items-center justify-between px-2 py-2 hover:bg-[#3e3e3e] rounded cursor-pointer"
+                          >
+                            <span>Người sáng tạo</span>
+                            <i class="fa-solid fa-check check-icon hidden!"></i>
+                          </li>
+                        </ul>
+
+                        <!-- Phần 2: Xem dưới dạng (4 Chế độ) -->
+                        <div
+                          class="px-2 pt-2 pb-1.5 text-[11px] font-bold text-gray-400"
+                        >
+                          Xem dưới dạng
+                        </div>
+                        <div
+                          class="grid grid-cols-4 gap-1 p-1 bg-[#181818] rounded-md"
+                        >
+                          <!-- 1. Compact List -->
+                          <button
+                            data-layout="compact-list"
+                            data-icon="fa-bars"
+                            title="Danh sách thu gọn"
+                            class="layout-btn flex items-center justify-center h-8 rounded hover:bg-[#3e3e3e] text-gray-400 hover:text-white transition"
+                          >
+                            <i class="fa-solid fa-bars text-sm"></i>
+                          </button>
+
+                          <!-- 2. Default List (Mặc định active) -->
+                          <button
+                            data-layout="default-list"
+                            data-icon="fa-list-ul"
+                            title="Danh sách mặc định"
+                            class="layout-btn flex items-center justify-center h-8 rounded bg-[#3e3e3e] text-green-500 transition"
+                          >
+                            <i class="fa-solid fa-list-ul text-sm"></i>
+                          </button>
+
+                          <!-- 3. Compact Grid -->
+                          <button
+                            data-layout="compact-grid"
+                            data-icon="fa-table-cells"
+                            title="Lưới thu gọn"
+                            class="layout-btn flex items-center justify-center h-8 rounded hover:bg-[#3e3e3e] text-gray-400 hover:text-white transition"
+                          >
+                            <i class="fa-solid fa-table-cells text-sm"></i>
+                          </button>
+
+                          <!-- 4. Default Grid -->
+                          <button
+                            data-layout="default-grid"
+                            data-icon="fa-border-all"
+                            title="Lưới mặc định"
+                            class="layout-btn flex items-center justify-center h-8 rounded hover:bg-[#3e3e3e] text-gray-400 hover:text-white transition"
+                          >
+                            <i class="fa-solid fa-border-all text-sm"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Khu vực chứa danh sách Playlist / Nghệ sĩ đã follow (Cần để render dữ liệu động) -->
+                <div
+                  id="library-list"
+                  class="flex flex-col gap-1 mt-2 overflow-y-auto scroll-smooth scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-500 transition-colors"
+                ></div>
+              </div>
+            </div>
+          </nav>
+        </aside>
+        <!-- Thêm ngay sau thẻ </aside> của Sidebar left -->
+        <div
+          id="sidebar-resizer"
+          class="w-1 hover:w-1.5 cursor-col-resize hover:bg-green-500 bg-transparent transition-all z-10 select-none"
+          title="Kéo để thay đổi chiều rộng"
+        ></div>
+
+        <!-- main -->
+        <main
+          id="main-view"
+          class="flex-1 min-w-0 min-h-0 pb-20 bg-background-card rounded-md overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent hover:scrollbar-thumb-[#555] hover:scrollbar-track-transparent"
+        >
+          <div id="home-view" class="px-10 py-4">
+            <section>
+              <h2
+                class="mt-5 text-2xl font-bold hover:underline hover:cursor-pointer"
+              >
+                Today’s biggest hits
+              </h2>
+              <div
+                id="track-list"
+                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+              ></div>
+            </section>
+            <section>
+              <h2
+                class="mt-5 text-2xl font-bold hover:underline hover:cursor-pointer"
+              >
+                Trending artists
+              </h2>
+              <div
+                id="artist-list"
+                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+              ></div>
+            </section>
+            <section>
+              <h2
+                class="mt-1 text-2xl font-bold hover:underline hover:cursor-pointer"
+              >
+                Popular albums
+              </h2>
+              <div
+                id="album-list"
+                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+              ></div>
+            </section>
+
+            <section>
+              <h2
+                class="mt-5 text-2xl font-bold hover:underline hover:cursor-pointer"
+              >
+                All playlists
+              </h2>
+              <div
+                id="playlist-list"
+                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+              ></div>
+            </section>
+          </div>
+
+          <!-- detail-view -->
+          <div id="detail-view" class="hidden"></div>
+        </main>
+      </div>
+
+      <!-- sign up -->
+      <div
+        id="signup-banner"
+        class="sign-up-free p-2 fixed bottom-0 left-0 right-0 z-30 bg-black"
+      >
+        <aside id="play-music">
+          <div
+            class="content-sign-up cursor-pointer h-16 flex justify-between items-center gap-12 relative bg-gradient-to-r from-[#af2896] to-[#509bf5] w-full pl-3.75 pr-6 pt-2.75 pb-1.75 rounded-md"
+          >
+            <div class="mb-1">
+              <p class="font-bold">Xem trước Spotify</p>
+              <p>
+                Đăng ký để nghe không giới hạn các bài hát và podcast với quảng
+                cáo không thường xuyên. Không cần thẻ tín dụng.
+              </p>
+            </div>
+            <button class="cursor-pointer shrink-0 group" id="sign-up">
+              <span
+                class="flex pointer-events-none justify-center items-center h-12 py-2 px-8 bg-foreground-base group-hover:bg-[#ccc] transition duration-200 text-black rounded-full text-base font-bold"
+              >
+                Đăng ký miễn phí
+              </span>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div
+      id="player-bar"
+      class="fixed bottom-0 left-0 right-0 h-[80px] bg-background-base border-t border-[#282828] px-4 flex items-center gap-4 z-40"
+    >
+      <div class="flex items-center gap-3 w-[30%] min-w-[160px]">
+        <img
+          id="player-cover"
+          class="w-14 h-14 rounded object-cover bg-[#333] hidden"
+          alt=""
+        />
+        <div class="min-w-0">
+          <p
+            id="player-title"
+            class="text-sm font-medium truncate text-white"
+          ></p>
+          <p
+            id="player-artist"
+            class="text-xs text-foreground-accent truncate"
+          ></p>
+        </div>
+      </div>
+      <div class="flex flex-col items-center flex-1 gap-1">
+        <div class="flex items-center gap-4">
+          <button
+            id="btn-shuffle"
+            title="Shuffle"
+            class="cursor-pointer text-foreground-accent hover:text-white text-sm"
+          >
+            <i class="fa-solid fa-shuffle"></i>
+          </button>
+          <button
+            id="btn-prev"
+            title="Previous"
+            class="cursor-pointer text-foreground-accent hover:text-white text-lg"
+          >
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <button
+            id="btn-play"
+            title="Play"
+            class="cursor-pointer w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105"
+          >
+            <i id="play-icon" class="fa-solid fa-play text-sm ml-0.5"></i>
+          </button>
+          <button
+            id="btn-next"
+            title="Next"
+            class="cursor-pointer text-foreground-accent hover:text-white text-lg"
+          >
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+          <button
+            id="btn-repeat"
+            title="Repeat"
+            class="cursor-pointer text-foreground-accent hover:text-white text-sm"
+          >
+            <i class="fa-solid fa-repeat"></i>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 w-full max-w-[480px]">
+          <span
+            id="time-current"
+            class="text-[11px] text-foreground-accent w-10 text-right"
+          >
+            0:00
+          </span>
+          <input
+            id="progress-bar"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            class="flex-1 h-1 accent-white cursor-pointer"
+          />
+          <span id="time-total" class="text-[11px] text-foreground-accent w-10">
+            0:00
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 w-[30%] justify-end">
+        <button
+          id="lyrics"
+          class="text-foreground-accent hover:text-white cursor-pointer"
+        >
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+        <button
+          id="waiting-list"
+          class="text-foreground-accent hover:text-white cursor-pointer"
+        >
+          <i class="fa-solid fa-rectangle-list"></i>
+        </button>
+        <button
+          id="connect-device"
+          class="text-foreground-accent hover:text-white cursor-pointer"
+        >
+          <i class="fa-solid fa-mobile-screen-button"></i>
+        </button>
+        <button
+          id="btn-volume"
+          title="Volume"
+          class="text-foreground-accent hover:text-white cursor-pointer"
+        >
+          <i
+            id="volume-icon"
+            class="fa-solid fa-volume-high"
+            
+          ></i>
+        </button>
+        <input
+          id="volume-bar"
+          type="range"
+          min="0"
+          max="100"
+          value="80"
+          class="w-24 h-1 accent-white cursor-pointer"
+        />
+        <button
+          id="open-minimized-player"
+          class="text-foreground-accent hover:text-white cursor-pointer"
+        >
+          <i class="fa-solid fa-window-restore"></i>
+        </button>
+        <button
+          id="Open-full-screen-mode"
+          class="text-foreground-accent hover:text-white cursor-pointer"
+        >
+          <i class="fa-solid fa-expand"></i>
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="library-context-menu"
+      class="hidden fixed z-[9999] min-w-[200px] bg-[#282828] rounded-md shadow-2xl border border-[#333] py-1 text-sm text-white"
+    >
+      <button
+        data-action="open"
+        class="ctx-item w-full text-left px-4 py-2.5 hover:bg-[#3e3e3e]"
+      >
+        Open
+      </button>
+      <button
+        data-action="unfollow"
+        class="ctx-item w-full text-left px-4 py-2.5 hover:bg-[#3e3e3e] hidden"
+      >
+        Unfollow
+      </button>
+      <button
+        data-action="remove"
+        class="ctx-item w-full text-left px-4 py-2.5 hover:bg-[#3e3e3e] hidden"
+      >
+        Remove from Your Library
+      </button>
+      <button
+        data-action="delete"
+        class="ctx-item w-full text-left px-4 py-2.5 hover:bg-[#3e3e3e] text-red-400 hidden"
+      >
+        Delete
+      </button>
+    </div>
+    <div
+      id="app-tooltip"
+      class="hidden fixed z-[10000] pointer-events-none bg-[#282828] text-white text-xs font-medium px-2 py-1 rounded shadow-lg border border-[#3e3e3e] whitespace-nowrap"
+    ></div>
+    <audio id="audio-player" preload="metadata"></audio>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

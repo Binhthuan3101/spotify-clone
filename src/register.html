@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.png" />
+    <title>Đăng ký - Spotify</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script
+      src="https://kit.fontawesome.com/ff53e92e9d.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-text-fill-color: #d1d5db !important;
+        box-shadow: 0 0 0px 1000px transparent inset !important;
+        transition: background-color 50000s ease-in-out 0s !important;
+      }
+    </style>
+  </head>
+  <body
+    class="p-6 bg-black flex flex-col items-center justify-center min-h-screen"
+  >
+    <div class="p-6 rounded-lg max-w-md w-full">
+      <h1
+        class="text-center flex flex-col items-center gap-3 text-[48px] mb-4 text-white font-bold"
+      >
+        <i class="fa-brands fa-spotify text-green-400"></i>
+        Đăng ký để bắt đầu nghe
+      </h1>
+      <form class="flex flex-col gap-4" id="form-register">
+        <input
+          class="bg-transparent border text-gray-300 border-neutral-500 px-3 py-2 rounded focus:border-white focus:outline-none"
+          name="username"
+          placeholder="Username..."
+          required
+          type="text"
+        />
+        <input
+          class="bg-transparent border text-gray-300 border-neutral-500 px-3 py-2 rounded focus:border-white focus:outline-none"
+          name="email"
+          placeholder="Email..."
+          required
+          type="email"
+        />
+        <input
+          class="bg-transparent border text-gray-300 border-neutral-500 px-3 py-2 rounded focus:border-white focus:outline-none"
+          name="password"
+          placeholder="Password..."
+          required
+          type="password"
+        />
+        <input
+          class="bg-transparent border text-gray-300 border-neutral-500 px-3 py-2 rounded focus:border-white focus:outline-none"
+          name="display_name"
+          placeholder="Display Name..."
+          type="text"
+        />
+        <input
+          class="bg-transparent border text-gray-300 border-neutral-500 px-3 py-2 rounded focus:border-white focus:outline-none"
+          name="bio"
+          placeholder="Bio..."
+          type="text"
+        />
+        <select
+          class="bg-transparent border text-gray-300 border-neutral-500 px-3 py-2 rounded focus:border-white focus:outline-none"
+          name="country"
+          id="country"
+        >
+          <option value="" disabled selected class="bg-black text-gray-400">
+            Country
+          </option>
+          <option value="VN" class="bg-black text-gray-300">Vietnam</option>
+          <option value="US" class="bg-black text-gray-300">
+            United States
+          </option>
+          <option value="TW" class="bg-black text-gray-300">Taiwan</option>
+          <option value="CHINA" class="bg-black text-gray-300">China</option>
+        </select>
+
+        <button
+          class="w-full bg-green-400 px-3 py-3 rounded-2xl hover:cursor-pointer font-bold text-black hover:bg-green-300 transition duration-200"
+          type="submit"
+        >
+          Tiếp theo
+        </button>
+      </form>
+      <p class="mt-4 text-center text-white">hoặc</p>
+      <p class="mt-4 flex flex-col gap-3 text-sm text-center text-gray-300">
+        Bạn đã có tài khoản?
+        <a href="login.html" class="text-white font-extrabold text-base">
+          Đăng nhập
+        </a>
+      </p>
+    </div>
+
+    <script type="module">
+      import {
+        httpRequest,
+        refreshAccessToken,
+        extractTokens,
+      } from "./libs/httpRequest.js";
+
+      async function checkExistingSession() {
+        const accessToken = localStorage.getItem("access_token");
+        const refreshToken = localStorage.getItem("refresh_token");
+
+        if (!accessToken && !refreshToken) return;
+
+        try {
+          const data = await httpRequest.get("/api/users/me");
+          if (data && (data.user || data.data || !data.error)) {
+            window.location.href = "../index.html";
+            return;
+          }
+        } catch (err) {
+          if (refreshToken || accessToken) {
+            try {
+              await refreshAccessToken();
+              const data = await httpRequest.get("/api/users/me");
+              if (data && (data.user || data.data || !data.error)) {
+                window.location.href = "../index.html";
+                return;
+              }
+            } catch (refreshErr) {
+              console.error("Refresh failed on register page:", refreshErr);
+              localStorage.removeItem("access_token");
+              localStorage.removeItem("refresh_token");
+            }
+          } else {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+          }
+        }
+      }
+
+      checkExistingSession();
+
+      const formRegister = document.querySelector("#form-register");
+      formRegister.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(formRegister);
+        const data = Object.fromEntries(formData.entries());
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+        if (!passwordRegex.test(data.password)) {
+          alert(
+            "Mật khẩu phải có tối thiểu 6 ký tự, bao gồm cả chữ hoa, chữ thường và chữ số!",
+          );
+          return;
+        }
+
+        try {
+          const response = await httpRequest.post("/api/auth/register", data);
+
+          // Hỗ trợ cả flat và nested tokens
+          const { access_token, refresh_token } = extractTokens(response);
+
+          if (access_token) {
+            localStorage.setItem("access_token", access_token);
+            if (refresh_token) {
+              localStorage.setItem("refresh_token", refresh_token);
+            }
+            alert("Đăng ký thành công!");
+            window.location.href = "../index.html";
+          } else {
+            alert(response.message || "Đăng ký thất bại.");
+          }
+        } catch (err) {
+          alert(err.message || "Đã có lỗi xảy ra khi đăng ký!");
+        }
+      });
+    </script>
+  </body>
+</html>
