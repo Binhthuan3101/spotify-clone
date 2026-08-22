@@ -119,6 +119,7 @@ if (token) {
           src="./src/assets/avatar.jpg"
           class="w-8 h-8 aspect-square object-cover rounded-full pointer-events-none"
           alt="avatar"
+          onerror="this.onerror=null; this.src='https://www.shutterstock.com/image-vector/avatar-photo-default-user-icon-260nw-2558759029.jpg';"
         />
       </button>
     `;
