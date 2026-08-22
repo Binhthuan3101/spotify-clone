@@ -78,7 +78,7 @@
         try {
           const data = await httpRequest.get("/api/users/me");
           if (data && (data.user || data.data || !data.error)) {
-            window.location.href = "../index.html";
+            window.location.href = "./index.html";
             return;
           }
         } catch (err) {
@@ -87,7 +87,7 @@
               await refreshAccessToken();
               const data = await httpRequest.get("/api/users/me");
               if (data && (data.user || data.data || !data.error)) {
-                window.location.href = "../index.html";
+                window.location.href = "./index.html";
                 return;
               }
             } catch (refreshErr) {
@@ -121,7 +121,7 @@
               localStorage.setItem("refresh_token", refresh_token);
             }
             alert("Đăng nhập thành công!");
-            window.location.href = "../index.html";
+            window.location.href = "./index.html";
           } else {
             alert(response.message || "Đăng nhập thất bại!");
           }

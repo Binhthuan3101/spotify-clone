@@ -122,7 +122,7 @@
               await refreshAccessToken();
               const data = await httpRequest.get("/api/users/me");
               if (data && (data.user || data.data || !data.error)) {
-                window.location.href = "../index.html";
+                window.location.href = "./index.html";
                 return;
               }
             } catch (refreshErr) {
@@ -165,7 +165,7 @@
               localStorage.setItem("refresh_token", refresh_token);
             }
             alert("Đăng ký thành công!");
-            window.location.href = "../index.html";
+            window.location.href = "./index.html";
           } else {
             alert(response.message || "Đăng ký thất bại.");
           }
