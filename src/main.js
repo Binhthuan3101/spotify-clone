@@ -210,20 +210,20 @@ if (token) {
   bar?.classList.remove("hidden");
 
   document.querySelector("#register")?.addEventListener("click", () => {
-    location.href = "./src/register.html";
+    location.href = "./register.html";
   });
 
   document.querySelector("#login")?.addEventListener("click", () => {
-    location.href = "./src/login.html";
+    location.href = "./login.html";
   });
 
   signUpBanner.classList.remove("hidden");
   signUpBanner.addEventListener("click", () => {
-    location.href = "./src/register.html";
+    location.href = "./register.html";
   });
 
   document.querySelector("#sign-up")?.addEventListener("click", () => {
-    location.href = "./src/register.html";
+    location.href = "./register.html";
   });
 
   playerBar.classList.add("hidden");
@@ -761,7 +761,7 @@ const formatNumber = (n) =>
   n == null ? "0" : Number(n).toLocaleString("vi-VN");
 const requireAuth = () => {
   if (!token) {
-    location.href = "./src/login.html";
+    location.href = "./login.html";
     return false;
   }
   return true;
@@ -1179,7 +1179,7 @@ function setupPlayer() {
             : "fa-solid fa-volume-high";
 
       //  Generate New Icon
-      const newIcon = createNewIcon(iconName,"volume-icon")
+      const newIcon = createNewIcon(iconName, "volume-icon");
       icon.replaceWith(newIcon);
     }
   });
@@ -1327,7 +1327,7 @@ document
   .querySelector("#btn-create-first-playlist")
   .addEventListener("click", () => {
     if (!token) {
-      window.location.href = "./src/login.html";
+      window.location.href = "./login.html";
     } else {
       createPlaylist();
     }
