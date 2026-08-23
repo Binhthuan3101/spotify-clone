@@ -779,6 +779,32 @@ document.querySelector("#logo-home").addEventListener("click", (e) => {
   showHome();
 });
 
+function normalizeTrack(t) {
+  if (!t) return t;
+  const audio = t.audio_url || t.track_audio_url || "";
+  const secureAudio = audio.startsWith("http://")
+    ? audio.replace("http://", "https://")
+    : audio;
+  return {
+    ...t,
+    id: t.track_id || t.id,
+    title: t.title || t.track_title || "",
+    audio_url: secureAudio,
+    duration: t.duration ?? t.track_duration ?? 0,
+    image_url:
+      t.image_url ||
+      t.track_image_url ||
+      t.album_cover_image_url ||
+      "",
+    artist_name: t.artist_name || "",
+    album_cover_image_url:
+      t.album_cover_image_url || t.track_image_url || t.image_url || "",
+  };
+}
+function normalizeTracks(list) {
+  return (list || []).map(normalizeTrack);
+}
+
 async function openDetail(type, id) {
   if (!id || !detailView) return;
   homeView.classList.add("hidden");
@@ -793,6 +819,7 @@ async function openDetail(type, id) {
 }
 
 function renderTrackRows(tracks, showImg = true) {
+  tracks = normalizeTracks(tracks);
   if (!tracks.length)
     return `<p class="text-sm text-foreground-accent py-4">Chưa có bài hát</p>`;
   detailTrackList = tracks;
@@ -1014,6 +1041,7 @@ async function renderPlaylistDetail(id) {
   const isPublic = !!playlist.is_public;
   const isOwner = playlist.is_owner;
   const following = playlist.is_following;
+  const existingIds = new Set(tracks.map((t) => t.id));
   detailView.innerHTML = `
     <div class="py-4 px-10">
       <div class="flex flex-col sm:flex-row gap-6 items-end mb-8">
@@ -1026,12 +1054,36 @@ async function renderPlaylistDetail(id) {
             <button id="detail-play" class="w-12 h-12 rounded-full bg-green-500 text-black flex items-center justify-center hover:scale-105"><i class="fa-solid fa-play ml-0.5"></i></button>
             ${
               isOwner
-                ? `<button id="btn-delete-playlist" class="cursor-pointer px-4 py-1.5 rounded-full border border-red-500/50 text-sm font-bold text-red-400">Xóa</button>`
+                ? `<button id="btn-add-tracks" class="cursor-pointer px-4 py-1.5 rounded-full border border-[#727272] text-sm font-bold text-white hover:border-white hover:scale-105 transition">
+                 <i class="fa-solid fa-plus mr-1"></i> Thêm bài hát
+               </button>
+               <button id="btn-delete-playlist" class="cursor-pointer px-4 py-1.5 rounded-full border border-red-500/50 text-sm font-bold text-red-400 hover:scale-105 ">Xóa</button>`
                 : `<button id="btn-follow-playlist" class="cursor-pointer px-4 py-1.5 rounded-full border border-[#727272] text-sm font-bold text-white">${following ? "Đã lưu" : "Lưu vào thư viện"}</button>`
             }
           </div>
         </div>
       </div>
+
+      ${
+        isOwner
+          ? `<!--panel chọn bài hát-->
+      <div id="add-tracks-panel" class="hidden mb-8 p-4 rounded-lg bg-[#181818] border border-[#333]">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-base font-bold text-foreground-base">Tìm và thêm bài hát</h3>
+          <button id="btn-close-add-panel" class="text-foreground-accent hover:text-foreground-base hover:scale-105 cursor-pointer text-sm">
+            <span><i class="fa-solid fa-xmark"></i></span>
+          </button>
+        </div>
+        <div class="relative mb-3">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-accent text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input id="add-track-search" type="text" placeholder="Tìm bài hát bạn muốn thêm" class="w-full h-11 pl-10 pr-4 rounded-md bg-[#2a2a2a] text-white text-sm outline-none focus:ring-1 focus:ring-white placeholder:text-foreground-accent"/>
+        </div>
+        <div id="add-track-results" class="max-h-72 overflow-y-auto flex flex-col gap-1">
+          <p class="text-sm text-foreground-accent py-4 text-center">Gõ tên bài hát để tìm kiếm</p>
+        </div>
+      </div>`
+          : ""
+      }
       ${renderTrackRows(tracks)}
     </div>
     `;
@@ -1040,6 +1092,163 @@ async function renderPlaylistDetail(id) {
     .querySelector("#detail-play")
     .addEventListener("click", () => tracks[0] && playTrack(tracks[0], tracks));
   bindTrackRows();
+
+  if (isOwner) {
+    const panel = document.querySelector("#add-tracks-panel");
+    const resultsEl = document.querySelector("#add-track-results");
+    let addSearchTimer = null;
+    document.querySelector("#btn-add-tracks").addEventListener("click", () => {
+      panel.classList.toggle("hidden");
+      if (panel && !panel.classList.contains("hidden")) {
+        document.querySelector("#add-track-search").focus();
+
+        loadAddTrackSuggestions();
+      }
+    });
+    document
+      .querySelector("#btn-close-add-panel")
+      .addEventListener("click", () => {
+        panel.classList.add("hidden");
+      });
+
+    async function loadAddTrackSuggestions() {
+      try {
+        const list = globalData.tracks.length
+          ? globalData.tracks
+          : await (async (params) => {
+              const res = httpRequest.get("/api/tracks/trending?limit=20");
+              return res.tracks || res;
+            })();
+        renderAddTrackResults(list);
+      } catch {
+        if (resultsEl)
+          resultsEl.innerHTML = `<p class="text-sm py-4 text-center text-foreground-accent">Không tải được gợi ý</p>`;
+      }
+    }
+
+    function renderAddTrackResults(list) {
+      if (!resultsEl) return;
+      if (!list.length) {
+        resultsEl.innerHTML =
+          "<p class='text-sm text-foreground-accent py-4 text-center'>Không tìm thấy bài hát</p>";
+        return;
+      }
+      resultsEl.innerHTML = list
+        .map((t) => {
+          const already = existingIds.has(t.id);
+          const img =
+            t.image_url ||
+            t.album_cover_image_url ||
+            t.artist_image_url ||
+            DEFAULT_IMAGE;
+          return `
+        <div class="flex items-center gap-3 p-2 rounded-md hover:bg-[#ffffff1a] group">
+          <img src="${img}" class="w-10 h-10 rounded object-cover shrink-0" onerror="this.src='${DEFAULT_IMAGE}'"/>
+          <div class="min-w-0 flex-1">
+            <p class="text-sm text-foreground-base truncate font-medium">${t.title || ""}</p>
+            <p class="text-xs text-foreground-accent truncate">${t.artist_name || ""}</p>
+          </div>
+          ${
+            already
+            ? `<span class="text-xs text-green-500 shrink-0 px-2">Đã thêm</span>
+              `
+              : `<button class="btn-add-this-track cursor-pointer shrink-0 px-3 py-1.5 rounded-full border border-[#727272] text-xs font-bold text-foreground-base hover:border-foreground-base hover:scale-105 transition"
+            data-track-id="${t.id}">Thêm</button>`
+          }
+        </div>
+        `;
+        })
+        .join("");
+
+      resultsEl.querySelectorAll(".btn-add-this-track").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const trackId = btn.dataset.trackId;
+          btn.disabled = true;
+          btn.textContent = "...";
+          try {
+            await httpRequest.post(`/api/playlists/${id}/tracks`, {
+              track_id: trackId,
+              position: 0,
+            });
+            existingIds.add(trackId);
+            btn.outerHTML =
+              "<p class='text-xs text-green-500 shrink-0 px-2'>Đã thêm</p>";
+          } catch (error) {
+            btn.disabled = false;
+            btn.textContent = "Thêm";
+            alert(error.message || "Không thêm được bài hát");
+          }
+        });
+      });
+    }
+
+    document
+      .querySelector("#add-track-search")
+      .addEventListener("input", (e) => {
+        clearTimeout(addSearchTimer);
+        const q = e.target.value.toLowerCase().trim();
+        // 1) Lọc ngay local bằng includes (nhanh)
+        if (q && globalData.tracks?.length) {
+          const local = globalData.tracks.filter(
+            (t) =>
+              t.title?.toLowerCase().includes(q) ||
+              t.artist_name?.toLowerCase().includes(q),
+          );
+          if (local.length) renderAddTrackResults(local);
+        }
+        // 2) Gọi API search (debounce) để bổ sung kết quả đầy đủ hơn
+        addSearchTimer = setTimeout(async () => {
+          if (!q) {
+            loadAddTrackSuggestions();
+            return;
+          }
+          try {
+            let list = [];
+            try {
+              const res = await httpRequest.get(
+                `/api/search/tracks?q=${encodeURIComponent(q)}&limit=20`,
+              );
+              list = res.tracks || res.data || [];
+            } catch {}
+            if (!list.length) {
+              try {
+                const uni = await httpRequest.get(
+                  `/api/search?q=${encodeURIComponent(q)}&type=track&limit=20`,
+                );
+                list = uni.tracks || uni.data?.tracks || [];
+              } catch {}
+            }
+            // Gộp với local includes, bỏ trùng id
+            const local = (globalData.tracks || []).filter(
+              (t) =>
+                t.title?.toLowerCase().includes(q) ||
+                t.artist_name?.toLowerCase().includes(q),
+            );
+            const map = new Map();
+            [...local, ...list].forEach((t) => {
+              if (t?.id) map.set(t.id, t);
+            });
+            renderAddTrackResults([...map.values()]);
+          } catch (err) {
+            console.error(err);
+            // vẫn hiện local nếu API lỗi
+            const local = (globalData.tracks || []).filter(
+              (t) =>
+                t.title?.toLowerCase().includes(q) ||
+                t.artist_name?.toLowerCase().includes(q),
+            );
+            if (local.length) renderAddTrackResults(local);
+            else if (resultsEl)
+              resultsEl.innerHTML = `<p class="text-sm text-red-400 py-4 text-center">Lỗi tìm kiếm</p>`;
+          }
+        }, 350);
+      });
+    document
+      .querySelector("#btn-close-add-panel")
+      ?.addEventListener("click", () => {
+        renderPlaylistDetail(id);
+      });
+  }
   document
     .querySelector("#btn-follow-playlist")
     ?.addEventListener("click", async () => {
