@@ -16,9 +16,10 @@
     <title>spotify</title>
   </head>
   <body>
+    <div id="overlay" class="fixed hidden top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.6)] z-999"></div>
     <div class="flex h-dvh flex-col relative overflow-hidden">
       <header
-        class="bg-[#000] w-full flex items-center p-2 font-bold text-lg text-white relative"
+        class="bg-[#000] w-full flex items-center z-1000 p-2 font-bold text-lg text-white relative"
       >
         <div
           class="w-full flex justify-between items-center gap-4"
@@ -33,7 +34,7 @@
 
           <!-- active -->
           <div
-            class="hidden lg:flex fixed top-16 z-[1000] h-screen lg:h-auto right-0 w-[350px] bg-[rgba(0,0,0,0.9)] p-4 lg:p-0 lg:static lg:w-auto"
+            class="-right-[350px] lg:flex fixed top-16 z-[1000] h-screen transition-all duration-300 lg:h-auto right-0 w-[350px] bg-[rgba(0,0,0,0.9)] p-4 lg:p-0 lg:static lg:w-auto"
             id="content-left"
           >
             <div

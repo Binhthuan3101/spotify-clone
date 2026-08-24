@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="./src/assets/favicon.png" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      href="./src/assets/favicon.png"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="./src/style.css" />
     <script
       src="https://kit.fontawesome.com/ff53e92e9d.js"
@@ -13,46 +17,78 @@
   </head>
   <body class="p-6 bg-[#121212] text-white min-h-screen font-sans">
     <!-- Header Navbar -->
-    <header class="border-b border-gray-800">
-      <div class="flex justify-between items-center px-8 pb-4">
-        <a
-          href="./index.html"
-          class="text-3xl gap-2 font-bold text-foreground-base hover:opacity-90 flex justify-center items-center"
-        >
-          <span><i class="fa-brands fa-spotify"></i></span>
-          <span>Spotify</span>
-        </a>
-        <div class="flex gap-3 items-center">
-          <a
-            class="text-base px-3 py-1.5 text-white hover:text-green-600 font-bold"
-            href="#!"
-            >Các gói Premium</a
-          >
-          <a
-            class="text-base px-3 py-1.5 text-white hover:text-green-600 font-bold"
-            href="#!"
-            >Hỗ trợ</a
-          >
-          <a
-            class="text-base px-3 py-1.5 text-white hover:text-green-600 font-bold"
-            href="#!"
-            >Tải xuống</a
-          >
-          <div class="w-[2px] h-5 bg-white"></div>
-          <button
-            id="btn-logout"
-            class="bg-transparent hover:text-green-600 px-4 py-1.5 rounded text-lg font-semibold cursor-pointer"
-          >
-            Đăng xuất
-          </button>
-        </div>
-      </div>
-    </header>
+     <div id="overlay" onclick="
+    this.classList.add('hidden');
+    document.querySelector('#menu').classList.remove('right-0');
+    document.querySelector('#btn-menu').innerHTML = '<i class=\'fa-solid fa-bars\'></i>';
+" class="fixed hidden top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.6)] z-40"></div>
+
+<header class="border-b border-gray-800 relative z-50">
+  <div class="flex justify-between items-center px-3 pb-4">
+    <a
+      href="./index.html"
+      class="text-xl lg:text-3xl gap-2 font-bold text-foreground-base hover:opacity-90 flex justify-center items-center"
+    >
+      <span><i class="fa-brands fa-spotify"></i></span>
+      <span>Spotify</span>
+    </a>
+    
+    <div
+      id="menu"
+      class="fixed h-full top-19 w-60 transition-all duration-300 ease-linear -right-60 bg-background-card px-2 py-4 flex flex-col lg:static lg:w-auto lg:bg-transparent lg:flex-row lg:gap-3 items-start lg:items-center z-50"
+    >
+      <a
+        class="text-base rounded-md lg:rounded-none hover:bg-background-card-hover w-full lg:w-fit block px-3 py-1.5 lg:inline-block lg:p-0 text-white hover:text-green-600 font-bold"
+        href="#!"
+      >
+        Các gói Premium
+      </a>
+      <a
+        class="text-base rounded-md lg:rounded-none hover:bg-background-card-hover w-full lg:w-fit block px-3 py-1.5 lg:inline-block lg:p-0 text-white hover:text-green-600 font-bold"
+        href="#!"
+      >
+        Hỗ trợ
+      </a>
+      <a
+        class="text-base rounded-md lg:rounded-none hover:bg-background-card-hover w-full lg:w-fit block px-3 py-1.5 lg:inline-block lg:p-0 text-white hover:text-green-600 font-bold"
+        href="#!"
+      >
+        Tải xuống
+      </a>
+      <div class="w-[2px] hidden lg:block h-5 bg-white"></div>
+      <button
+        id="btn-logout"
+        class="bg-transparent hover:text-green-600 w-full text-left lg:w-fit block lg:inline-block px-3 py-1.5 lg:px-4 lg:py-1.5 rounded text-base font-semibold cursor-pointer"
+      >
+        Đăng xuất
+      </button>
+    </div>
+
+    <button
+      onclick="
+        const menu = document.querySelector('#menu');
+        const over = document.querySelector('#overlay');
+        const isOpened = menu.classList.toggle('right-0');
+        
+        if (isOpened) {
+            over.classList.remove('hidden');
+        } else {
+            over.classList.add('hidden');
+        }
+        
+        this.querySelector('#btn-menu').innerHTML = isOpened
+          ? '<i class=\'fa-solid fa-xmark\'></i>'
+          : '<i class=\'fa-solid fa-bars\'></i>';
+      "
+      class="text-xl lg:hidden px-2 py-1.5 flex justify-center items-center hover:bg-background-card-hover rounded-full cursor-pointer z-50"
+    >
+      <span id="btn-menu"><i class="fa-solid fa-bars"></i></span>
+    </button>
+  </div>
+</header>
 
     <!-- Main Container -->
-    <main
-      class="max-w-xl mx-auto bg-[#2A2A2A] p-6 sm:p-8 rounded-xl shadow-xl"
-    >
+    <main class="max-w-xl mx-auto bg-[#2A2A2A] p-6 sm:p-8 rounded-xl shadow-xl">
       <h1
         class="text-3xl font-bold text-foreground-base mb-6 pb-2 border-b border-gray-800"
       >
@@ -81,9 +117,9 @@
       }
 
       // 2. Đăng xuất
-      logoutBtn.addEventListener("click",  () => {
+      logoutBtn.addEventListener("click", () => {
         localStorage.clear();
-        window.location.href="./login.html";
+        window.location.href = "./login.html";
       });
 
       // 3. Lấy dữ liệu và hiển thị Profile
@@ -108,10 +144,7 @@
 
           const fallbackImg =
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt3xbjpqEjTdZ98pMXIgGabMHwyeK4Qyvyqi97np4-NQ&s=10";
-          const avatarUrl =
-            user.image_url ||
-            user.profile_image ||
-            fallbackImg;
+          const avatarUrl = user.image_url || user.profile_image || fallbackImg;
 
           const username =
             user.display_name ||

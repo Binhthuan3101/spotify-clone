@@ -1629,7 +1629,7 @@ document
   if (!tip) return;
   const map = [
     ["#home", "Trang chủ"],
-    ["#avatar", "Tài khoảng"],
+    ["#avatar", "Tài khoản"],
     ["#create", "Tạo playlist"],
     ["#search-btn", "Tìm trong thư viện"],
     ["#btn-shuffle", "Shuffle"],
@@ -1676,21 +1676,24 @@ setupSearchAPI();
   const left = document.querySelector("#content-left");
   const btn = document.querySelector("#menu-bar");
   const icon = document.querySelector("#menu-bar-icon");
+  const overlay = document.querySelector("#overlay");
 
   function setClosed() {
-    left?.classList.add("hidden");
+    left?.classList.replace("right-0","-right-[350px]");
     left?.classList.remove("flex");
+    overlay?.classList.add("hidden");
     if (icon) icon.innerHTML = '<i class="fa-solid fa-bars"></i>';
   }
   function setOpen() {
-    left?.classList.remove("hidden");
+    left?.classList.replace("-right-[350px]","right-0");
     left?.classList.add("flex");
+    overlay?.classList.remove("hidden");
     if (icon) icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
   }
 
   btn?.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (left?.classList.contains("hidden")) setOpen();
+    if (left?.classList.contains("-right-[350px]")) setOpen();
     else setClosed();
   });
 
