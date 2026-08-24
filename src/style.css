@@ -12,6 +12,29 @@
 
 @layer base {
   body {
-    @apply bg-[var(--color-background-base)] text-[var(--color-foreground-base)];
+    @apply bg-[var(--color-background-base)] text-[var(--color-foreground-base)] antialiased;
   }
+}
+
+@layer components {
+  .card-item {
+    @apply snap-start;
+  }
+}
+
+
+/* Spotify-like collapsed library rail */
+@media (max-width: 1023px) {
+  #desktop-left .header-sidebar header {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+
+#context-menu:not(.hidden) {
+  display: block;
+}
+#desktop-left {
+  overflow-x: visible;
 }

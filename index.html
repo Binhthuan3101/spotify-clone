@@ -20,7 +20,10 @@
       <header
         class="bg-[#000] w-full flex items-center p-2 font-bold text-lg text-white relative"
       >
-        <div class="w-full flex items-center gap-4" id="content">
+        <div
+          class="w-full flex justify-between items-center gap-4"
+          id="content"
+        >
           <!-- logo -->
           <div class="w-12 h-12 flex justify-center items-center text-4xl">
             <a href="/" id="logo-home" title="Spotify">
@@ -29,9 +32,16 @@
           </div>
 
           <!-- active -->
-          <div class="flex-1" id="content-left">
-            <div class="flex justify-between items-center gap-4">
-              <div class="w-[546px] min-w-[350px] max-w-[546px] flex items-center">
+          <div
+            class="hidden lg:flex fixed top-16 z-[1000] h-screen lg:h-auto right-0 w-[350px] bg-[rgba(0,0,0,0.9)] p-4 lg:p-0 lg:static lg:w-auto"
+            id="content-left"
+          >
+            <div
+              class="flex flex-col w-full lg:flex-row lg:items-center lg:justify-between gap-4 items-stretch text-left"
+            >
+              <div
+                class="w-full lg:w-[546px] lg:min-w-[350px] lg:max-w-[546px] flex items-center"
+              >
                 <button
                   id="home"
                   class="flex h-12 w-12 cursor-pointer shrink-0 items-center justify-center rounded-full bg-background-card hover:bg-background-card-hover text-white hover:scale-105 transition duration-200 text-2xl"
@@ -84,39 +94,41 @@
                   </div>
                 </div>
               </div>
-              <div class="flex justify-center items-center gap-2">
+              <div
+                class="flex w-full lg:w-auto flex-col lg:flex-row items-stretch lg:items-center gap-3 lg:gap-2 text-left"
+              >
                 <button
-                  class="text-foreground-accent text-base font-bold hover:text-white cursor-pointer"
+                  class="block w-full text-left lg:w-auto  text-foreground-accent text-base font-bold hover:text-white cursor-pointer py-2 lg:py-0"
                   id="premium"
                 >
                   Premium
                 </button>
                 <button
-                  class="text-foreground-accent text-base font-bold hover:text-white cursor-pointer"
+                  class="block w-full text-left lg:w-auto  text-foreground-accent text-base font-bold hover:text-white cursor-pointer py-2 lg:py-0"
                   id="support"
                 >
                   Hỗ trợ
                 </button>
                 <button
-                  class="text-foreground-accent text-base font-bold hover:text-white cursor-pointer"
+                  class="block w-full text-left lg:w-auto  text-foreground-accent text-base font-bold hover:text-white cursor-pointer py-2 lg:py-0"
                   id="download"
                 >
                   Tải xuống
                 </button>
                 <div
-                  class="w-[1px] h-6.25 m-4 bg-foreground-base"
+                  class="w-[1px] hidden lg:block h-6.25 m-4 bg-foreground-base"
                   id="bar"
                 ></div>
                 <a
                   href="#!"
-                  class="w-fit py-1 p-4 text-foreground-accent hover:text-white text-sm cursor-pointer"
+                  class="block w-full text-left lg:w-fit py-2 lg:py-1 px-0 lg:px-4 text-foreground-accent hover:text-white text-sm cursor-pointer"
                 >
                   <span><i class="fa-regular fa-circle-down"></i></span>
                   <span>Cài đặt Ứng dụng</span>
                 </a>
                 <div>
                   <div
-                    class="flex items-center justify-center"
+                    class="flex flex-col lg:flex-row items-stretch lg:items-center justify-start lg:justify-center w-full lg:w-auto gap-2 text-left"
                     id="active"
                   ></div>
                   <div
@@ -210,34 +222,55 @@
               </div>
             </div>
           </div>
+
+          <button
+            type="button"
+            id="menu-bar"
+            class="text-xl px-2 py-1.5 flex justify-center items-center rounded-full hover:bg-background-card-hover cursor-pointer lg:hidden"
+          >
+            <span id="menu-bar-icon"><i class="fa-solid fa-bars"></i></span>
+          </button>
         </div>
       </header>
 
       <!-- main -->
-      <div class="flex flex-1 gap-2 overflow-hidden px-2">
+      <div
+        class="flex flex-row flex-1 gap-1 sm:gap-2 overflow-hidden px-1 sm:px-2 min-h-0"
+      >
         <aside
           id="desktop-left"
-          class="w-1/4 ml-2 bg-background-side rounded-md shrink-0 flex flex-col h-full"
+          class="w-[72px] lg:w-1/4 lg:max-w-xs xl:max-w-none bg-[#121212] pb-20 rounded-md lg:rounded-lg shrink-0 flex flex-col relative h-full min-h-0 overflow-x-visible overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent hover:scrollbar-thumb-[#555]"
         >
-          <nav class="h-full flex flex-col">
+          <nav class="h-full flex flex-col min-h-0 overflow-x-visible">
             <div class="flex flex-col h-full">
               <!-- Header Sidebar -->
               <div class="header-sidebar">
                 <header class="pt-4 px-4 pb-2 relative">
                   <div class="flex gap-2 items-center justify-between">
-                    <div class="flex-1 flex items-center gap-2">
-                      <h1 class="text-base font-bold text-foreground-base">
+                    <div class="flex-1 flex items-center gap-2 min-w-0">
+                      <h1
+                        class="hidden lg:block text-base font-bold text-foreground-base truncate"
+                      >
                         Thư viện
                       </h1>
+                      <button
+                        type="button"
+                        class="lg:hidden size-10 flex items-center justify-center rounded-full hover:bg-[#1f1f1f] text-white"
+                        title="Thư viện"
+                      >
+                        <i class="fa-solid fa-book"></i>
+                      </button>
                     </div>
 
                     <!-- skill (được main.js render nút "Tạo" và "Mở rộng") -->
-                    <div class="flex gap-2 skill items-center"></div>
+                    <div
+                      class="flex gap-1 lg:gap-2 skill items-center justify-center lg:justify-end"
+                    ></div>
 
                     <!-- Context Menu (Menu khi bấm nút Tạo) -->
                     <div
                       id="context-menu"
-                      class="absolute hidden top-16 bg-background-card-hover z-1000 -right-60 w-[320px] md:w-[380px] rounded-md shadow-2xl border border-[#333]"
+                      class="fixed hidden z-[2000] w-[min(92vw,340px)] md:w-[360px] rounded-lg shadow-2xl border border-[#333] bg-[#282828]"
                     >
                       <ul class="p-1">
                         <!-- Option 1: Playlist -->
@@ -345,12 +378,12 @@
                 </header>
 
                 <!-- Nút lọc Nghệ sĩ / Playlist (Được render bởi main.js khi đăng nhập) -->
-                <div class="artist flex py-2 px-4 gap-2"></div>
+                <div class="artist hidden lg:flex py-2 px-4 gap-2"></div>
               </div>
 
               <!-- 1. SIDE CONTENT: Hiển thị khi CHƯA ĐĂNG NHẬP (Unauthenticated State) -->
               <div
-                class="side-content flex-1 px-2 pb-2 overflow-y-auto flex flex-col"
+                class="side-content flex-1 px-1 lg:px-2 pb-2 overflow-y-auto flex flex-col"
                 id="side-content"
               >
                 <div
@@ -410,7 +443,7 @@
                 </div>
 
                 <!-- Footer Links & Language -->
-                <div class="w-full">
+                <div class="hidden lg:block w-full">
                   <div class="my-4 px-4">
                     <ul class="flex flex-wrap gap-y-2 gap-x-4">
                       <li class="list-none">
@@ -480,11 +513,11 @@
               <!-- 2. SIDE ARTIST: Hiển thị khi ĐÃ ĐĂNG NHẬP (Authenticated State) -->
               <div
                 id="side-artist"
-                class="side-artist hidden flex-1 px-2 pb-2 flex flex-col gap-2 overflow-y-auto"
+                class="side-artist hidden flex-1 px-1 lg:px-2 pb-2 flex flex-col gap-2 overflow-y-auto"
               >
                 <div class="pr-2">
                   <div
-                    class="flex justify-between items-center gap-4 pt-[2px] px-2"
+                    class="hidden lg:flex justify-between items-center gap-4 pt-[2px] px-2"
                   >
                     <!-- Khung tìm kiếm thu gọn/mở rộng -->
                     <div class="relative flex items-center">
@@ -636,7 +669,7 @@
                 <!-- Khu vực chứa danh sách Playlist / Nghệ sĩ đã follow (Cần để render dữ liệu động) -->
                 <div
                   id="library-list"
-                  class="flex flex-col gap-1 mt-2 overflow-y-auto scroll-smooth scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-500 transition-colors"
+                  class="flex flex-col items-center lg:items-stretch gap-2 lg:gap-1 mt-2 px-1 lg:px-0 overflow-y-auto scroll-smooth"
                 ></div>
               </div>
             </div>
@@ -645,60 +678,238 @@
         <!-- Thêm ngay sau thẻ </aside> của Sidebar left -->
         <div
           id="sidebar-resizer"
-          class="w-1 hover:w-1.5 cursor-col-resize hover:bg-green-500 bg-transparent transition-all z-10 select-none"
+          class="hidden lg:block w-1 hover:w-1.5 cursor-col-resize hover:bg-green-500 bg-transparent transition-all z-10 select-none"
           title="Kéo để thay đổi chiều rộng"
         ></div>
 
         <!-- main -->
         <main
           id="main-view"
-          class="flex-1 min-w-0 min-h-0 pb-20 bg-background-card rounded-md overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent hover:scrollbar-thumb-[#555] hover:scrollbar-track-transparent"
+          class="flex-1 min-w-0 min-h-0 mb-[72px] sm:mb-20 md:mb-20 bg-[#1f1f1f] rounded-md lg:rounded-lg overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent hover:scrollbar-thumb-[#555]"
         >
-          <div id="home-view" class="px-10 py-4">
+          <div
+            id="home-view"
+            class="px-4 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-5"
+          >
             <section>
               <h2
-                class="mt-5 text-2xl font-bold hover:underline hover:cursor-pointer"
+                class="mt-5 sm:mt-6 text-xl sm:text-2xl font-bold tracking-tight hover:underline hover:cursor-pointer"
               >
                 Today’s biggest hits
               </h2>
               <div
                 id="track-list"
-                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+                class="-mx-1 mt-3 flex overflow-x-auto scrollbar-none snap-x snap-mandatory pb-1"
               ></div>
             </section>
             <section>
               <h2
-                class="mt-5 text-2xl font-bold hover:underline hover:cursor-pointer"
+                class="mt-5 sm:mt-6 text-xl sm:text-2xl font-bold tracking-tight hover:underline hover:cursor-pointer"
               >
                 Trending artists
               </h2>
               <div
                 id="artist-list"
-                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+                class="-mx-1 mt-3 flex overflow-x-auto scrollbar-none snap-x snap-mandatory pb-1"
               ></div>
             </section>
             <section>
               <h2
-                class="mt-1 text-2xl font-bold hover:underline hover:cursor-pointer"
+                class="mt-5 sm:mt-6 text-xl sm:text-2xl font-bold tracking-tight hover:underline hover:cursor-pointer"
               >
                 Popular albums
               </h2>
               <div
                 id="album-list"
-                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+                class="-mx-1 mt-3 flex overflow-x-auto scrollbar-none snap-x snap-mandatory pb-1"
               ></div>
             </section>
 
             <section>
               <h2
-                class="mt-5 text-2xl font-bold hover:underline hover:cursor-pointer"
+                class="mt-5 sm:mt-6 text-xl sm:text-2xl font-bold tracking-tight hover:underline hover:cursor-pointer"
               >
                 All playlists
               </h2>
               <div
                 id="playlist-list"
-                class="-ml-3 mt-2 flex overflow-x-auto scrollbar-none inset-shadow-gray-200"
+                class="-mx-1 mt-3 flex overflow-x-auto scrollbar-none snap-x snap-mandatory pb-1"
               ></div>
+            </section>
+
+            <section>
+              <div
+                class="flex mt-12 sm:mt-20 mb-8 sm:mb-10 py-8 sm:py-10 border-t border-b border-[#333] flex-wrap justify-between items-start gap-6 sm:gap-8"
+              >
+                <ul class="flex flex-col gap-3">
+                  <li class="text-base text-foreground-base font-bold">
+                    Công ty
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Giới thiệu
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Việc làm
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      For the Record
+                    </a>
+                  </li>
+                </ul>
+                <ul class="flex flex-col gap-3">
+                  <li class="text-base text-foreground-base font-bold">
+                    Cộng đồng
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Dành cho các nghệ sĩ
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Nhà phát triển
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Quảng cáo
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Nhà đầu tư
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Nhà cung cấp
+                    </a>
+                  </li>
+                </ul>
+                <ul class="flex flex-col gap-3">
+                  <li class="text-base text-foreground-base font-bold">
+                    Đường liên kết hữu ích
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Hỗ trợ
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Ứng dụng Di động miễn phí
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Phổ biến theo quốc gia
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Top lời bài hát
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Thêm nhạc
+                    </a>
+                  </li>
+                </ul>
+                <ul class="flex flex-col gap-3">
+                  <li class="text-base text-foreground-base font-bold">
+                    Các gói của Spotify
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Premium Individual
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Premium Student
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#!"
+                      class="text-foreground-accent hover:text-foreground-base transition hover:scale-105 text-sm"
+                    >
+                      Spotify Free
+                    </a>
+                  </li>
+                </ul>
+                <div class="flex gap-3">
+                  <a
+                    class="text-xl px-2 py-1.5 flex justify-center items-center rounded-full inline-block bg-background-card-hover"
+                    href="https://www.instagram.com/"
+                  >
+                    <i class="fa-brands fa-instagram"></i>
+                  </a>
+                  <a
+                    class="text-xl px-2 py-1.5 flex justify-center items-center rounded-full inline-block bg-background-card-hover"
+                    href="https://x.com/spotify"
+                  >
+                    <i class="fa-brands fa-x-twitter"></i>
+                  </a>
+                  <a
+                    class="text-xl px-2 py-1.5 flex justify-center items-center rounded-full inline-block bg-background-card-hover"
+                    href="https://www.facebook.com/"
+                  >
+                    <i class="fa-brands fa-facebook"></i>
+                  </a>
+                </div>
+              </div>
             </section>
           </div>
 
@@ -710,11 +921,11 @@
       <!-- sign up -->
       <div
         id="signup-banner"
-        class="sign-up-free p-2 fixed bottom-0 left-0 right-0 z-30 bg-black"
+        class="sign-up-free p-1.5 sm:p-2 fixed bottom-0 left-0 right-0 z-30"
       >
         <aside id="play-music">
           <div
-            class="content-sign-up cursor-pointer h-16 flex justify-between items-center gap-12 relative bg-gradient-to-r from-[#af2896] to-[#509bf5] w-full pl-3.75 pr-6 pt-2.75 pb-1.75 rounded-md"
+            class="content-sign-up cursor-pointer min-h-12 sm:min-h-14 md:h-16 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-6 relative bg-gradient-to-r from-[#af2896] to-[#509bf5] w-full px-3 sm:px-5 py-2.5 rounded-lg"
           >
             <div class="mb-1">
               <p class="font-bold">Xem trước Spotify</p>
@@ -738,67 +949,67 @@
     <!-- PLAYER -->
     <div
       id="player-bar"
-      class="fixed bottom-0 left-0 right-0 h-[80px] bg-background-base border-t border-[#282828] px-4 flex items-center gap-4 z-40"
+      class="fixed bottom-0 left-0 right-0 z-40 h-[70px] sm:h-[80px] bg-[#181818] border-t border-[#282828] px-2 sm:px-3 md:px-4 flex items-center gap-2 sm:gap-3 md:gap-4"
     >
-      <div class="flex items-center gap-3 w-[30%] min-w-[160px]">
+      <div class="flex items-center gap-2 sm:gap-3 w-[40%] sm:w-[30%] min-w-0">
         <img
           id="player-cover"
-          class="w-14 h-14 rounded object-cover bg-[#333] hidden"
+          class="size-11 sm:size-14 rounded-md object-cover bg-[#333] hidden shrink-0"
           alt=""
         />
-        <div class="min-w-0">
+        <div class="min-w-0 flex-1">
           <p
             id="player-title"
-            class="text-sm font-medium truncate text-white"
+            class="text-xs sm:text-sm font-semibold truncate text-white"
           ></p>
           <p
             id="player-artist"
-            class="text-xs text-foreground-accent truncate"
+            class="text-[11px] sm:text-xs text-[#b3b3b3] truncate"
           ></p>
         </div>
       </div>
-      <div class="flex flex-col items-center flex-1 gap-1">
-        <div class="flex items-center gap-4">
+      <div class="flex flex-col items-center flex-1 gap-0.5 sm:gap-1 min-w-0">
+        <div class="flex items-center gap-3 sm:gap-5">
           <button
             id="btn-shuffle"
             title="Shuffle"
-            class="cursor-pointer text-foreground-accent hover:text-white text-sm"
+            class="hidden md:inline-flex cursor-pointer text-[#b3b3b3] hover:text-white text-sm"
           >
             <i class="fa-solid fa-shuffle"></i>
           </button>
           <button
             id="btn-prev"
             title="Previous"
-            class="cursor-pointer text-foreground-accent hover:text-white text-lg"
+            class="cursor-pointer text-[#b3b3b3] hover:text-white text-lg sm:text-xl"
           >
             <i class="fa-solid fa-backward-step"></i>
           </button>
           <button
             id="btn-play"
             title="Play"
-            class="cursor-pointer w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105"
+            class="cursor-pointer size-8 sm:size-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105"
           >
             <i id="play-icon" class="fa-solid fa-play text-sm ml-0.5"></i>
           </button>
           <button
             id="btn-next"
             title="Next"
-            class="cursor-pointer text-foreground-accent hover:text-white text-lg"
+            class="cursor-pointer text-[#b3b3b3] hover:text-white text-lg sm:text-xl"
           >
             <i class="fa-solid fa-forward-step"></i>
           </button>
           <button
             id="btn-repeat"
             title="Repeat"
-            class="cursor-pointer text-foreground-accent hover:text-white text-sm"
+            class="hidden md:inline-flex cursor-pointer text-[#b3b3b3] hover:text-white text-sm"
           >
             <i class="fa-solid fa-repeat"></i>
           </button>
         </div>
-        <div class="flex items-center gap-2 w-full max-w-[480px]">
+        <div class="hidden sm:flex items-center gap-2 w-full max-w-[480px]">
           <span
             id="time-current"
-            class="text-[11px] text-foreground-accent w-10 text-right"
+            class="text-[10px] sm:text-[11px] text-[#b3b3b3] w-8 sm:w-10 text-right"
           >
             0:00
           </span>
@@ -810,40 +1021,41 @@
             value="0"
             class="flex-1 h-1 accent-white cursor-pointer"
           />
-          <span id="time-total" class="text-[11px] text-foreground-accent w-10">
+          <span
+            id="time-total"
+            class="text-[10px] sm:text-[11px] text-[#b3b3b3] w-8 sm:w-10"
+          >
             0:00
           </span>
         </div>
       </div>
-      <div class="flex items-center gap-2 w-[30%] justify-end">
+      <div
+        class="flex items-center justify-end gap-2 sm:gap-3 w-[18%] sm:w-[30%] min-w-0"
+      >
         <button
           id="lyrics"
-          class="text-foreground-accent hover:text-white cursor-pointer"
+          class="hidden lg:inline-flex text-[#b3b3b3] hover:text-white cursor-pointer"
         >
           <i class="fa-solid fa-microphone"></i>
         </button>
         <button
           id="waiting-list"
-          class="text-foreground-accent hover:text-white cursor-pointer"
+          class="hidden lg:inline-flex text-[#b3b3b3] hover:text-white cursor-pointer"
         >
           <i class="fa-solid fa-rectangle-list"></i>
         </button>
         <button
           id="connect-device"
-          class="text-foreground-accent hover:text-white cursor-pointer"
+          class="hidden xl:inline-flex text-[#b3b3b3] hover:text-white cursor-pointer"
         >
           <i class="fa-solid fa-mobile-screen-button"></i>
         </button>
         <button
           id="btn-volume"
           title="Volume"
-          class="text-foreground-accent hover:text-white cursor-pointer"
+          class="text-[#b3b3b3] hover:text-white cursor-pointer"
         >
-          <i
-            id="volume-icon"
-            class="fa-solid fa-volume-high"
-            
-          ></i>
+          <i id="volume-icon" class="fa-solid fa-volume-high"></i>
         </button>
         <input
           id="volume-bar"
@@ -851,17 +1063,17 @@
           min="0"
           max="100"
           value="80"
-          class="w-24 h-1 accent-white cursor-pointer"
+          class="hidden md:block w-16 lg:w-24 h-1 accent-white cursor-pointer"
         />
         <button
           id="open-minimized-player"
-          class="text-foreground-accent hover:text-white cursor-pointer"
+          class="hidden xl:inline-flex text-[#b3b3b3] hover:text-white cursor-pointer"
         >
           <i class="fa-solid fa-window-restore"></i>
         </button>
         <button
           id="Open-full-screen-mode"
-          class="text-foreground-accent hover:text-white cursor-pointer"
+          class="hidden xl:inline-flex text-[#b3b3b3] hover:text-white cursor-pointer"
         >
           <i class="fa-solid fa-expand"></i>
         </button>

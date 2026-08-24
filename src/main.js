@@ -68,8 +68,8 @@ let currentLayout = "default-list";
 let currentSort = "recent";
 document.querySelector("#home")?.addEventListener("click", (e) => {
   e.preventDefault();
-  if (typeof showHome === "function") showHome;
-  location.href = "/";
+  if (typeof showHome === "function") showHome();
+  else location.href = "/";
 });
 
 // Phím tắt Ctrl + Shift + L để focus ô tìm kiếm
@@ -102,26 +102,28 @@ const token = localStorage.getItem("access_token");
 
 if (token) {
   // Giao diện khi ĐÃ ĐĂNG NHẬP
-  headerContent?.classList.add("justify-between");
   const contentLeft = document.querySelector("#content-left");
-  if (contentLeft) contentLeft.className = "";
+  if (contentLeft) contentLeft.classList.remove("lg:flex-1")
 
   if (actives) {
     actives.innerHTML = `
-      <button class="text-neutral-400 flex justify-center cursor-pointer items-center w-8 h-8 hover:text-white hover:scale-105 transition duration-200 text-lg" title="Thông báo">
-        <i class="fa-regular fa-bell"></i>
-      </button>
-      <button class="sm:block text-neutral-400 flex justify-center cursor-pointer items-center w-8 h-8 hover:text-white hover:scale-105 transition duration-200 text-lg" title="Bạn bè">
-        <i class="fa-solid fa-users"></i>
-      </button>
-      <button class="ml-2 w-12 h-12 rounded-full cursor-pointer flex items-center justify-center" id="avatar">
-        <img
-          src="./src/assets/avatar.jpg"
-          class="w-8 h-8 aspect-square object-cover rounded-full pointer-events-none"
-          alt="avatar"
-          onerror="this.onerror=null; this.src='https://www.shutterstock.com/image-vector/avatar-photo-default-user-icon-260nw-2558759029.jpg';"
-        />
-      </button>
+      <div class="flex flex-col lg:flex-row items-start lg:items-center gap-2 w-full lg:w-auto">
+        <button class="text-neutral-400 flex justify-start lg:justify-center cursor-pointer items-center gap-2 w-full lg:w-8 h-8 hover:text-white hover:scale-105 transition duration-200 text-lg" title="Thông báo">
+          <i class="fa-regular fa-bell"></i><span class="text-sm lg:hidden">Thông báo</span>
+        </button>
+        <button class="text-neutral-400 flex justify-start lg:justify-center cursor-pointer items-center gap-2 w-full lg:w-8 h-8 hover:text-white hover:scale-105 transition duration-200 text-lg" title="Bạn bè">
+          <i class="fa-solid fa-users"></i><span class="text-sm lg:hidden">Bạn bè</span>
+        </button>
+        <button class="lg:ml-2 w-full lg:w-12 h-10 lg:h-12 rounded-full cursor-pointer flex items-center justify-start lg:justify-center gap-2" id="avatar">
+          <img
+            src="./src/assets/avatar.jpg"
+            class="w-8 h-8 aspect-square object-cover rounded-full pointer-events-none"
+            alt="avatar"
+            onerror="this.onerror=null; this.src='https://www.shutterstock.com/image-vector/avatar-photo-default-user-icon-260nw-2558759029.jpg';"
+          />
+          <span class="text-sm lg:hidden text-white">Tài khoản</span>
+        </button>
+      </div>
     `;
   }
 
@@ -140,14 +142,14 @@ if (token) {
   if (premium) {
     premium.textContent = "Khám phá Premium";
     premium.className =
-      "text-black text-sm font-bold w-fit py-1.5 px-4 bg-foreground-base rounded-full cursor-pointer hover:scale-105 transition-transform";
+      "text-black text-base font-bold w-fit py-1.5 px-4 bg-foreground-base rounded-full cursor-pointer hover:scale-105 transition-transform";
   }
 
   support?.classList.add("hidden");
   download?.classList.add("hidden");
-  bar?.classList.add("hidden");
+  bar?.classList.add("lg:hidden");
   signUpBanner?.classList.add("hidden");
-  playerBar.classList.remove("hidden");
+  playerBar?.classList.remove("hidden");
 
   // Update Header Sidebar
   const headerSidebar = document.querySelector(".header-sidebar");
@@ -155,13 +157,13 @@ if (token) {
     const skillEl = headerSidebar.querySelector(".skill");
     if (skillEl) {
       skillEl.innerHTML = `
-        <button id="create" class="py-2 px-2 md:px-3 bg-background-card rounded-full cursor-pointer flex justify-center items-center gap-2 hover:text-foreground-base transition-all text-foreground-accent">
+        <button id="create" title="Tạo" class="size-10 lg:size-auto lg:py-2 lg:px-3 bg-background-card rounded-full cursor-pointer flex justify-center items-center gap-2 hover:text-foreground-base transition-all text-foreground-accent">
           <span class="add-icon transition duration-200">
             <i class="fa-solid fa-plus"></i>
           </span>
-          <span class="hidden md:block text-foreground-base font-bold text-xs">Tạo</span>
+          <span class="hidden lg:block text-foreground-base font-bold text-xs">Tạo</span>
         </button>
-        <button title="Mở rộng thư viện" class="py-2 px-2.5 bg-background-card rounded-full cursor-pointer flex justify-center items-center gap-2 hover:text-foreground-base transition-all text-foreground-accent text-xs">
+        <button title="Mở rộng thư viện" class="hidden lg:flex py-2 px-2.5 bg-background-card rounded-full cursor-pointer justify-center items-center gap-2 hover:text-foreground-base transition-all text-foreground-accent text-xs">
           <span><i class="fa-solid fa-expand"></i></span>
         </button>
       `;
@@ -182,17 +184,16 @@ if (token) {
   document.querySelector(".side-content")?.classList.add("hidden");
 } else {
   // Giao diện khi CHƯA ĐĂNG NHẬP
-  headerContent?.classList.remove("justify-between");
   const contentLeft = document.querySelector("#content-left");
-  if (contentLeft) contentLeft.className = "flex-1";
+  if (contentLeft) contentLeft.classList.add("lg:flex-1")
 
   if (actives) {
     actives.innerHTML = `
-      <button id="register" class="text-sm font-bold w-fit py-1 pl-2 pr-4 text-foreground-accent hover:text-white cursor-pointer">
+      <button id="register" class="block w-full text-left lg:w-fit text-sm font-bold py-2 lg:py-1 lg:pl-2 lg:pr-4 text-foreground-accent hover:text-white cursor-pointer">
         Đăng ký
       </button>
-      <button class="w-fit cursor-pointer" id="login">
-        <span class="flex pointer-events-none text-sm justify-center items-center text-black font-bold py-2.5 px-6 bg-foreground-base rounded-full hover:scale-105 transition-transform">
+      <button class="block w-full lg:w-fit cursor-pointer text-left" id="login">
+        <span class="inline-flex pointer-events-none text-sm justify-center items-center text-black font-bold py-2.5 px-6 bg-foreground-base rounded-full hover:scale-105 transition-transform">
           Đăng nhập
         </span>
       </button>
@@ -202,12 +203,12 @@ if (token) {
   if (premium) {
     premium.textContent = "Premium";
     premium.className =
-      "text-foreground-accent text-sm font-bold hover:text-white cursor-pointer";
+      "text-foreground-accent text-base font-bold hover:text-white cursor-pointer";
   }
 
   support?.classList.remove("hidden");
   download?.classList.remove("hidden");
-  bar?.classList.remove("hidden");
+  bar?.classList.remove("lg:hidden");
 
   document.querySelector("#register")?.addEventListener("click", () => {
     location.href = "./register.html";
@@ -226,16 +227,16 @@ if (token) {
     location.href = "./register.html";
   });
 
-  playerBar.classList.add("hidden");
+  playerBar?.classList.add("hidden");
 
   const skillEl = document.querySelector(".skill");
   if (skillEl) {
     skillEl.innerHTML = `
-      <button id="create" class="py-2 px-2 md:px-3 bg-background-card rounded-full cursor-pointer flex justify-center items-center gap-2 hover:text-foreground-base transition-all text-foreground-accent">
+      <button id="create" title="Tạo" class="size-10 lg:size-auto lg:py-2 lg:px-3 bg-background-card rounded-full cursor-pointer flex justify-center items-center gap-2 hover:text-foreground-base transition-all text-foreground-accent">
         <span class="add-icon transition duration-200">
           <i class="fa-solid fa-plus"></i>
         </span>
-        <span class="hidden md:block text-foreground-base font-bold text-xs">Tạo</span>
+        <span class="hidden lg:block text-foreground-base font-bold text-xs">Tạo</span>
       </button>
     `;
   }
@@ -304,12 +305,43 @@ document.addEventListener("click", (event) => {
   }
 });
 
-// Event Delegation cho nút #create (được tạo động)
+// Event Delegation cho nút #create — menu fixed, không bị sidebar cắt
+function positionContextMenu(anchor) {
+  if (!contextMenu || !anchor) return;
+  const r = anchor.getBoundingClientRect();
+  const menuW = Math.min(window.innerWidth * 0.92, 360);
+  let left = r.right + 8;
+  // nếu tràn phải → đặt bên phải gần nút hoặc căn trái nút
+  if (left + menuW > window.innerWidth - 8) {
+    left = Math.max(8, r.left);
+  }
+  // mobile hẹp: full gần giữa/ dưới nút
+  if (window.innerWidth < 1024) {
+    left = Math.min(r.left, window.innerWidth - menuW - 8);
+    left = Math.max(8, left);
+  }
+  let top = r.bottom + 8;
+  contextMenu.style.left = left + "px";
+  contextMenu.style.top = top + "px";
+  // nếu tràn dưới, đẩy lên
+  requestAnimationFrame(() => {
+    const mh = contextMenu.offsetHeight;
+    if (top + mh > window.innerHeight - 8) {
+      contextMenu.style.top = Math.max(8, r.top - mh - 8) + "px";
+    }
+  });
+}
+
 document.addEventListener("click", (event) => {
   const createBtn = event.target.closest("#create");
   if (createBtn) {
+    event.stopPropagation();
     createBtn.querySelector(".add-icon")?.classList.toggle("rotate-45");
+    const opening = contextMenu?.classList.contains("hidden");
     contextMenu?.classList.toggle("hidden");
+    if (opening) {
+      positionContextMenu(createBtn);
+    }
   }
 });
 
@@ -392,7 +424,7 @@ const renderData = (type, items) => {
   const htmlString = formattedItems
     .map(
       (item) => `
-      <div class="card-item shrink-0 p-3 rounded-md transition w-40 md:w-44 group hover:cursor-pointer flex flex-col gap-3 hover:bg-background-card-hover" data-type="${item.type}" data-id="${item.id || ""}">
+      <div class="card-item shrink-0 p-3 rounded-md transition w-36 sm:w-40 md:w-44 snap-start group hover:cursor-pointer flex flex-col gap-3 hover:bg-background-card-hover" data-type="${item.type}" data-id="${item.id || ""}">
         <div class="relative w-full z-0">
           <div class="w-full">
             <img
@@ -541,107 +573,111 @@ const renderLibrarySidebar = (artists = globalData.artists) => {
 
   if (artists.length === 0) {
     libraryListEl.innerHTML = `
-      <div class="p-3 text-xs text-foreground-accent">
+      <div class="hidden lg:block p-3 text-xs text-foreground-accent">
         Chưa có mục nào trong thư viện.
       </div>
     `;
     return;
   }
-  if (currentLayout === "compact-grid") {
+
+  // Container: mobile = cột ảnh giữa; desktop = theo layout
+  const isNarrow = window.innerWidth < 1024;
+  if (isNarrow) {
+    // Spotify collapsed rail: chỉ ảnh
     libraryListEl.className =
-      "grid grid-cols-3 gap-2 p-2 overflow-y-auto  scroll-smooth scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-500 transition-colors max-h-[calc(100vh-220px)]";
+      "flex flex-col items-center gap-3 p-2 overflow-y-auto scroll-smooth max-h-[calc(100vh-160px)]";
+  } else if (currentLayout === "compact-grid") {
+    libraryListEl.className =
+      "grid grid-cols-3 gap-2 p-2 overflow-y-auto scroll-smooth max-h-[calc(100vh-220px)]";
   } else if (currentLayout === "default-grid") {
     libraryListEl.className =
-      "grid grid-cols-2 gap-2 p-2 overflow-y-auto  scroll-smooth scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-500 transition-colors max-h-[calc(100vh-220px)]";
+      "grid grid-cols-2 gap-2 p-2 overflow-y-auto scroll-smooth max-h-[calc(100vh-220px)]";
   } else {
     libraryListEl.className =
-      "flex flex-col gap-1 p-2 overflow-y-auto  scroll-smooth scrollbar-thumb-neutral-700 hover:scrollbar-thumb-neutral-500 transition-colors max-h-[calc(100vh-220px)]";
+      "flex flex-col gap-1 p-2 overflow-y-auto scroll-smooth max-h-[calc(100vh-220px)]";
   }
 
   const artistList = artists
     .map((artist) => {
-      const name = artist.name;
+      const name = artist.name || "Nghệ sĩ";
       const image = artist.image_url || DEFAULT_IMAGE;
+      const id = artist.id || "";
+
+      // Mobile / narrow: chỉ avatar tròn (giống Spotify thu gọn)
+      if (isNarrow) {
+        return `
+          <button type="button"
+            class="lib-item group relative size-12 rounded-full overflow-hidden shrink-0 hover:scale-105 transition cursor-pointer ring-0 hover:ring-2 hover:ring-white/40"
+            data-type="artists" data-id="${id}" title="${name}">
+            <img src="${image}" alt="${name}"
+              class="w-full h-full object-cover"
+              onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';" />
+          </button>`;
+      }
 
       switch (currentLayout) {
-        // /LAYOUT 1: COMPACT LIST (Không có ảnh, Tên + Loại)
         case "compact-list":
           return `
-          <div class="flex items-center justify-between px-3 py-2 hover:bg-background-card-hover rounded cursor-pointer group transition-colors">
+          <div class="lib-item flex items-center justify-between px-3 py-2 hover:bg-background-card-hover rounded cursor-pointer group transition-colors"
+            data-type="artists" data-id="${id}">
               <div class="flex items-center gap-1.5 min-w-0">
                 <span class="text-xs font-semibold text-foreground-base truncate group-hover:text-green-500">${name}</span>
                 <span class="text-xs text-foreground-accent shrink-0">• Nghệ sĩ</span>
               </div>
-            </div>
-          `;
+            </div>`;
 
-        // LAYOUT 2: DEFAULT LIST (Ảnh nhỏ + Tên + Loại)
         case "default-list":
           return `
-        <div class="flex items-center gap-3 p-2 rounded-md hover:bg-background-card-hover cursor-pointer group transition-colors">
-          <div class="relative overflow-hidden rounded-full">
-            <img
-            src="${artist.image_url || DEFAULT_IMAGE}"
-            alt="${artist.name}"
-            class="w-12 h-12  object-cover shrink-0"
-            onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';"
-            />
-            <div class="opacity-0 flex justify-center items-center absolute transition-all duration-300 inset-0 w-full h-full group-hover:bg-[rgba(0,0,0,0.6)] group-hover:opacity-100">
-              <span><i class="fa-solid fa-play"></i></span>
-            </div>
+        <div class="lib-item flex items-center gap-3 p-2 rounded-md hover:bg-background-card-hover cursor-pointer group transition-colors"
+          data-type="artists" data-id="${id}">
+          <div class="relative overflow-hidden rounded-full shrink-0">
+            <img src="${image}" alt="${name}"
+              class="w-12 h-12 object-cover"
+              onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';" />
           </div>
-          <div class="flex flex-col overflow-hidden">
-            <span class="text-sm font-bold text-foreground-base truncate group-hover:text-white">
-             ${artist.name}
-           </span>
-           <span class="text-xs text-foreground-accent">
-             Nghệ sĩ
-           </span>
-         </div>
-       </div>
-    `;
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-semibold text-foreground-base truncate">${name}</p>
+            <p class="text-xs text-foreground-accent truncate">Nghệ sĩ</p>
+          </div>
+        </div>`;
 
-        // LAYOUT 3: COMPACT GRID (Chỉ Ảnh vuông/tròn + Tooltip khi Hover)
         case "compact-grid":
           return `
-        <div class="relative group cursor-pointer flex justify-center p-1">
-              <img
-                src="${image}"
-                alt="${name}"
-                class="w-20 h-20 object-cover rounded-full shadow-md group-hover:scale-105 transition-transform"
-                onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';"
-              />
-              <!-- Tooltip nổi chuẩn Spotify -->
-              <div class="absolute -right-18 z-100 -translate-y-1/2 top-1/2  mb-2 hidden group-hover:flex flex-col bg-[#282828] text-white text-[11px] rounded px-3 py-1.5 shadow-2xl z-[1001] whitespace-nowrap border border-[#444] pointer-events-none">
-                <span class="font-bold">${name}</span>
-                <span class="text-gray-400 text-[10px]">Nghệ sĩ</span>
-              </div>
-            </div>
-        `;
+            <div class="lib-item flex flex-col items-center gap-1 p-1 rounded cursor-pointer hover:bg-background-card-hover group"
+              data-type="artists" data-id="${id}">
+              <img src="${image}" alt="${name}"
+                class="w-full aspect-square rounded-full object-cover"
+                onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';" />
+              <span class="text-[10px] font-semibold text-foreground-base truncate w-full text-center">${name}</span>
+            </div>`;
 
         case "default-grid":
+        default:
           return `
-        <div class=" flex flex-col items-center p-2 hover:bg-background-card-hover rounded-md cursor-pointer text-center group transition-colors">
-              <div class="relative">
-              <img
-                src="${image}"
-                alt="${name}"
-                class="w-28 h-28 object-cover rounded-full mb-2 shadow-lg"
-                onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';"
-              />
-              <div class="flex justify-center w-12 h-12 rounded-full opacity-0 transition-all duration-300 group-hover:opacity-100 text-black group-hover:bg-green-600  items-center absolute text-sm bottom-4 right-0">
-              <i class="fa-solid fa-play"></i>
+            <div class="lib-item flex flex-col items-start gap-1 p-2 rounded cursor-pointer hover:bg-background-card-hover group"
+              data-type="artists" data-id="${id}">
+              <div class="relative w-full">
+                <img src="${image}" alt="${name}"
+                  class="w-full aspect-square rounded-full object-cover"
+                  onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';" />
               </div>
-              </div>
-              <span class="text-xs font-semibold text-foreground-base truncate w-full ">${name}</span>
+              <span class="text-xs font-semibold text-foreground-base truncate w-full">${name}</span>
               <span class="text-[10px] text-foreground-accent truncate w-full">Nghệ sĩ</span>
-            </div>
-        `;
+            </div>`;
       }
     })
     .join("");
 
   libraryListEl.innerHTML = artistList;
+
+  // Click item -> detail
+  libraryListEl.querySelectorAll(".lib-item").forEach((el) => {
+    el.addEventListener("click", () => {
+      const type = el.dataset.type;
+      const id = el.dataset.id;
+      if (id && typeof openDetail === "function") openDetail(type, id);
+    });
+  });
 };
 
 viewOptionsBtn?.addEventListener("click", (e) => {
@@ -777,8 +813,13 @@ function showHome() {
 document.querySelector("#logo-home").addEventListener("click", (e) => {
   e.preventDefault();
   showHome();
+  window.location.href = "/";
 });
 
+
+// ===== CHUẨN HÓA TRACK TỪ API PLAYLIST =====
+// API /playlists/:id/tracks trả về: track_id, track_title, track_audio_url, track_image_url, track_duration
+// Code còn lại dùng: id, title, audio_url, image_url, duration
 function normalizeTrack(t) {
   if (!t) return t;
   const audio = t.audio_url || t.track_audio_url || "";
@@ -792,7 +833,10 @@ function normalizeTrack(t) {
     audio_url: secureAudio,
     duration: t.duration ?? t.track_duration ?? 0,
     image_url:
-      t.image_url || t.track_image_url || t.album_cover_image_url || "",
+      t.image_url ||
+      t.track_image_url ||
+      t.album_cover_image_url ||
+      "",
     artist_name: t.artist_name || "",
     album_cover_image_url:
       t.album_cover_image_url || t.track_image_url || t.image_url || "",
@@ -824,21 +868,25 @@ function renderTrackRows(tracks, showImg = true, options = {}) {
   const playlistId = options.playlistId || "";
   return `<div class="mt-4">
     <div class="grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 text-xs text-foreground-accent border-b border-[#282828]">
-      <span class="w-6 text-center">#</span><span>Tiêu đề</span><span class="w-12 text-right"><i class="fa-regular fa-clock"></i></span>
+      <span class="w-6 text-center">#</span>
+      <span>Tiêu đề</span>
+      <span class="w-12 text-right"><i class="fa-regular fa-clock"></i></span>
     </div>
     ${tracks
       .map((t, i) => {
-        const img = t.image_url || t.album_cover_image_url || DEFAULT_IMAGE;
-        return `<div class="track-row grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 rounded-md hover:bg-[#ffffff1a] cursor-pointer group items-center" data-id="${t.id}" 
-        ${canRemove ? `data-can-remove="1" data-playlist-id="${playlistId}"` : ""}
-        ${canRemove ? `title="Double-click để xóa khỏi playlist"` : ""}>
+        const img = t.image_url || t.track_image_url || t.album_cover_image_url || t.artist_image_url || DEFAULT_IMAGE;
+        const trackId = t.id || t.track_id;
+        return `<div class="track-row grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 rounded-md hover:bg-[#ffffff1a] cursor-pointer group items-center"
+          data-id="${trackId}"
+          ${canRemove ? `data-can-remove="1" data-playlist-id="${playlistId}"` : ""}
+          ${canRemove ? `title="Double-click để xóa khỏi playlist"` : ""}>
         <span class="w-6 text-center text-sm text-foreground-accent group-hover:hidden">${i + 1}</span>
-        <button class="play-row-btn w-6 hidden group-hover:block text-white" data-id="${t.id}"><i class="fa-solid fa-play text-xs"></i></button>
+        <button class="play-row-btn w-6 hidden group-hover:block text-white" data-id="${trackId}"><i class="fa-solid fa-play text-xs"></i></button>
         <div class="flex items-center gap-3 min-w-0">
           ${showImg ? `<img src="${img}" class="w-10 h-10 rounded object-cover" onerror="this.src='${DEFAULT_IMAGE}'" />` : ""}
-          <div class="min-w-0"><p class="text-sm font-medium truncate text-white">${t.title || ""}</p><p class="text-xs text-foreground-accent truncate">${t.artist_name || ""}</p></div>
+          <div class="min-w-0"><p class="text-sm font-medium truncate text-white">${t.title || t.track_title || ""}</p><p class="text-xs text-foreground-accent truncate">${t.artist_name || ""}</p></div>
         </div>
-        <span class="w-12 text-right text-xs text-foreground-accent">${formatTime(t.duration)}</span>
+        <span class="w-12 text-right text-xs text-foreground-accent">${formatTime(t.duration || t.track_duration)}</span>
       </div>`;
       })
       .join("")}
@@ -847,15 +895,18 @@ function renderTrackRows(tracks, showImg = true, options = {}) {
 }
 
 function bindTrackRows(options = {}) {
+  // Click 1 lần: phát nhạc
   detailView?.querySelectorAll(".track-row, .play-row-btn").forEach((el) => {
     el.addEventListener("click", (e) => {
       e.stopPropagation();
-      const id = el.dataset.id || el.closest(".track-row")?.dataset.id;
-      const t = detailTrackList.find((x) => x.id === id);
+      const row = el.closest?.(".track-row") || el;
+      const id = el.dataset.id || row?.dataset.id;
+      const t = detailTrackList.find((x) => x.id === id || x.track_id === id);
       if (t) playTrack(t, detailTrackList);
     });
   });
 
+  // Double-click: xóa khỏi playlist (chỉ khi owner)
   detailView?.querySelectorAll(".track-row[data-can-remove='1']").forEach((row) => {
     row.addEventListener("dblclick", async (e) => {
       e.preventDefault();
@@ -864,12 +915,13 @@ function bindTrackRows(options = {}) {
       const playlistId = row.dataset.playlistId || options.playlistId;
       if (!trackId || !playlistId) return;
 
-      const track = detailTrackList.find((x) => x.id === trackId);
-      const name = track?.title || "bài hát này";
+      const track = detailTrackList.find((x) => x.id === trackId || x.track_id === trackId);
+      const name = track?.title || track?.track_title || "bài hát này";
       const ok = confirm(`Bạn có muốn xóa "${name}" khỏi playlist không?`);
       if (!ok) return;
 
       try {
+        // DELETE /api/playlists/:playlistId/tracks/:trackId
         await httpRequest.delete(`/api/playlists/${playlistId}/tracks/${trackId}`);
         if (typeof renderPlaylistDetail === "function") {
           await renderPlaylistDetail(playlistId);
@@ -1064,11 +1116,12 @@ async function renderPlaylistDetail(id) {
     httpRequest.get(`/api/playlists/${id}/tracks`),
   ]);
   const playlist = pl.playlist || pl.data || pl;
-  const tracks = tr.tracks || [];
+  // map track_title / track_audio_url / track_id → title / audio_url / id
+  const tracks = normalizeTracks(tr.tracks || tr.data || []);
   const isPublic = !!playlist.is_public;
   const isOwner = playlist.is_owner;
   const following = playlist.is_following;
-  const existingIds = new Set(tracks.map((t) => t.id));
+  const existingIds = new Set(tracks.map((t) => t.id || t.track_id));
   detailView.innerHTML = `
     <div class="py-4 px-10">
       <div class="flex flex-col sm:flex-row gap-6 items-end mb-8">
@@ -1111,14 +1164,14 @@ async function renderPlaylistDetail(id) {
       </div>`
           : ""
       }
-      ${renderTrackRows(tracks,true,{canRemove:isOwner,playlistId:id})}
+      ${renderTrackRows(tracks, true, { canRemove: isOwner, playlistId: id })}
     </div>
     `;
 
   document
     .querySelector("#detail-play")
     .addEventListener("click", () => tracks[0] && playTrack(tracks[0], tracks));
-  bindTrackRows({playlistId:id,canRemove:isOwner});
+  bindTrackRows({ playlistId: id, canRemove: isOwner });
 
   if (isOwner) {
     const panel = document.querySelector("#add-tracks-panel");
@@ -1140,13 +1193,14 @@ async function renderPlaylistDetail(id) {
 
     async function loadAddTrackSuggestions() {
       try {
-        const list = globalData.tracks.length
-          ? globalData.tracks
-          : await (async (params) => {
-              const res = httpRequest.get("/api/tracks/trending?limit=20");
-              return res.tracks || res;
-            })();
-        renderAddTrackResults(list);
+        let list = globalData.tracks?.length ? globalData.tracks : [];
+        if (!list.length) {
+          try {
+            const res = await httpRequest.get("/api/tracks?limit=20");
+            list = res.tracks || [];
+          } catch {}
+        }
+        renderAddTrackResults(normalizeTracks(list));
       } catch {
         if (resultsEl)
           resultsEl.innerHTML = `<p class="text-sm py-4 text-center text-foreground-accent">Không tải được gợi ý</p>`;
@@ -1172,13 +1226,12 @@ async function renderPlaylistDetail(id) {
         <div class="flex items-center gap-3 p-2 rounded-md hover:bg-[#ffffff1a] group">
           <img src="${img}" class="w-10 h-10 rounded object-cover shrink-0" onerror="this.src='${DEFAULT_IMAGE}'"/>
           <div class="min-w-0 flex-1">
-            <p class="text-sm text-foreground-base truncate font-medium">${t.title || ""}</p>
+            <p class="text-sm text-foreground-base truncate font-medium">${t.title || t.track_title || ""}</p>
             <p class="text-xs text-foreground-accent truncate">${t.artist_name || ""}</p>
           </div>
           ${
             already
-              ? `<span class="text-xs text-green-500 shrink-0 px-2">Đã thêm</span>
-              `
+              ? `<span class="text-xs text-green-500 shrink-0 px-2">Đã thêm</span>`
               : `<button class="btn-add-this-track cursor-pointer shrink-0 px-3 py-1.5 rounded-full border border-[#727272] text-xs font-bold text-foreground-base hover:border-foreground-base hover:scale-105 transition"
             data-track-id="${t.id}">Thêm</button>`
           }
@@ -1302,7 +1355,9 @@ async function renderPlaylistDetail(id) {
 }
 
 function playTrack(track, queue = null) {
+  track = normalizeTrack(track);
   if (!track?.audio_url || !audio) {
+    console.warn("Missing audio_url", track);
     alert("Không có audio!");
     return;
   }
@@ -1441,7 +1496,7 @@ function setupSearchAPI() {
   if (!searchText || !searchDropdown) return;
   const showTrending = async () => {
     try {
-      const res = httpRequest.get(`/api/search/trending?limit=10`);
+      const res = await httpRequest.get(`/api/search/trending?limit=10`);
       const list = res.trending_searches || [];
       searchDropdown.innerHTML = list.length
         ? `<div class="p-3">
@@ -1543,10 +1598,10 @@ async function createPlaylist() {
       description: "",
       is_public: true,
     });
-    const pl = res.playlists || res.data || res;
+    const pl = res.playlist || res.playlists || res.data || res;
     contextMenu?.classList.add("hidden");
     document.querySelector(".add-icon").classList.remove("rotate-45");
-    if (pl?.id) openDetail("playlist", pl.id);
+    if (pl?.id) openDetail("playlists", pl.id);
   } catch (error) {
     alert(error.message || "Không tạo được playlist");
   }
@@ -1615,3 +1670,65 @@ document
 })();
 setupPlayer();
 setupSearchAPI();
+
+// ========== RESPONSIVE: header menu ==========
+(function setupHeaderMenu() {
+  const left = document.querySelector("#content-left");
+  const btn = document.querySelector("#menu-bar");
+  const icon = document.querySelector("#menu-bar-icon");
+
+  function setClosed() {
+    left?.classList.add("hidden");
+    left?.classList.remove("flex");
+    if (icon) icon.innerHTML = '<i class="fa-solid fa-bars"></i>';
+  }
+  function setOpen() {
+    left?.classList.remove("hidden");
+    left?.classList.add("flex");
+    if (icon) icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+  }
+
+  btn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (left?.classList.contains("hidden")) setOpen();
+    else setClosed();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (window.innerWidth >= 1024) return;
+    if (
+      left &&
+      !left.classList.contains("hidden") &&
+      !left.contains(e.target) &&
+      !btn?.contains(e.target)
+    ) {
+      setClosed();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setClosed();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 1024) {
+      left?.classList.remove("hidden");
+      left?.classList.add("flex");
+    } else {
+      setClosed();
+    }
+  });
+})();
+
+// Sidebar compact khi < lg (chỉ ảnh như Spotify)
+(function setupLibraryCompactResize() {
+  let timer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (typeof renderLibrarySidebar === "function" && globalData?.artists?.length) {
+        renderLibrarySidebar(globalData.artists);
+      }
+    }, 150);
+  });
+})();
