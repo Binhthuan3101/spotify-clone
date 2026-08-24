@@ -792,10 +792,7 @@ function normalizeTrack(t) {
     audio_url: secureAudio,
     duration: t.duration ?? t.track_duration ?? 0,
     image_url:
-      t.image_url ||
-      t.track_image_url ||
-      t.album_cover_image_url ||
-      "",
+      t.image_url || t.track_image_url || t.album_cover_image_url || "",
     artist_name: t.artist_name || "",
     album_cover_image_url:
       t.album_cover_image_url || t.track_image_url || t.image_url || "",
@@ -818,11 +815,13 @@ async function openDetail(type, id) {
   } catch (e) {}
 }
 
-function renderTrackRows(tracks, showImg = true) {
+function renderTrackRows(tracks, showImg = true, options = {}) {
   tracks = normalizeTracks(tracks);
   if (!tracks.length)
     return `<p class="text-sm text-foreground-accent py-4">Chưa có bài hát</p>`;
   detailTrackList = tracks;
+  const canRemove = !!options.canRemove && !!options.playlistId;
+  const playlistId = options.playlistId || "";
   return `<div class="mt-4">
     <div class="grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 text-xs text-foreground-accent border-b border-[#282828]">
       <span class="w-6 text-center">#</span><span>Tiêu đề</span><span class="w-12 text-right"><i class="fa-regular fa-clock"></i></span>
@@ -830,7 +829,9 @@ function renderTrackRows(tracks, showImg = true) {
     ${tracks
       .map((t, i) => {
         const img = t.image_url || t.album_cover_image_url || DEFAULT_IMAGE;
-        return `<div class="track-row grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 rounded-md hover:bg-[#ffffff1a] cursor-pointer group items-center" data-id="${t.id}">
+        return `<div class="track-row grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 rounded-md hover:bg-[#ffffff1a] cursor-pointer group items-center" data-id="${t.id}" 
+        ${canRemove ? `data-can-remove="1" data-playlist-id="${playlistId}"` : ""}
+        ${canRemove ? `title="Double-click để xóa khỏi playlist"` : ""}>
         <span class="w-6 text-center text-sm text-foreground-accent group-hover:hidden">${i + 1}</span>
         <button class="play-row-btn w-6 hidden group-hover:block text-white" data-id="${t.id}"><i class="fa-solid fa-play text-xs"></i></button>
         <div class="flex items-center gap-3 min-w-0">
@@ -845,13 +846,39 @@ function renderTrackRows(tracks, showImg = true) {
   `;
 }
 
-function bindTrackRows() {
+function bindTrackRows(options = {}) {
   detailView?.querySelectorAll(".track-row, .play-row-btn").forEach((el) => {
     el.addEventListener("click", (e) => {
       e.stopPropagation();
       const id = el.dataset.id || el.closest(".track-row")?.dataset.id;
       const t = detailTrackList.find((x) => x.id === id);
       if (t) playTrack(t, detailTrackList);
+    });
+  });
+
+  detailView?.querySelectorAll(".track-row[data-can-remove='1']").forEach((row) => {
+    row.addEventListener("dblclick", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const trackId = row.dataset.id;
+      const playlistId = row.dataset.playlistId || options.playlistId;
+      if (!trackId || !playlistId) return;
+
+      const track = detailTrackList.find((x) => x.id === trackId);
+      const name = track?.title || "bài hát này";
+      const ok = confirm(`Bạn có muốn xóa "${name}" khỏi playlist không?`);
+      if (!ok) return;
+
+      try {
+        await httpRequest.delete(`/api/playlists/${playlistId}/tracks/${trackId}`);
+        if (typeof renderPlaylistDetail === "function") {
+          await renderPlaylistDetail(playlistId);
+        } else {
+          row.remove();
+        }
+      } catch (err) {
+        alert(err.message || "Không xóa được bài hát");
+      }
     });
   });
 }
@@ -1084,14 +1111,14 @@ async function renderPlaylistDetail(id) {
       </div>`
           : ""
       }
-      ${renderTrackRows(tracks)}
+      ${renderTrackRows(tracks,true,{canRemove:isOwner,playlistId:id})}
     </div>
     `;
 
   document
     .querySelector("#detail-play")
     .addEventListener("click", () => tracks[0] && playTrack(tracks[0], tracks));
-  bindTrackRows();
+  bindTrackRows({playlistId:id,canRemove:isOwner});
 
   if (isOwner) {
     const panel = document.querySelector("#add-tracks-panel");
@@ -1150,7 +1177,7 @@ async function renderPlaylistDetail(id) {
           </div>
           ${
             already
-            ? `<span class="text-xs text-green-500 shrink-0 px-2">Đã thêm</span>
+              ? `<span class="text-xs text-green-500 shrink-0 px-2">Đã thêm</span>
               `
               : `<button class="btn-add-this-track cursor-pointer shrink-0 px-3 py-1.5 rounded-full border border-[#727272] text-xs font-bold text-foreground-base hover:border-foreground-base hover:scale-105 transition"
             data-track-id="${t.id}">Thêm</button>`
