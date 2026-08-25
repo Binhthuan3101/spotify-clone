@@ -16,25 +16,43 @@
     <title>spotify</title>
   </head>
   <body>
-    <div id="overlay" class="fixed hidden top-0 left-0 w-full h-screen bg-[rgba(0,0,0,0.6)] z-999"></div>
+    <div id="overlay" class="fixed inset-0 hidden bg-black/60 z-[999] lg:hidden" aria-hidden="true"></div>
     <div class="flex h-dvh flex-col relative overflow-hidden">
       <header
-        class="bg-[#000] w-full flex items-center z-1000 p-2 font-bold text-lg text-white relative"
+        class="bg-[#000] w-full flex items-center px-3 z-1000 py-2 font-bold text-lg text-white relative"
       >
         <div
           class="w-full flex justify-between items-center gap-4"
           id="content"
         >
           <!-- logo -->
-          <div class="w-12 h-12 flex justify-center items-center text-4xl">
-            <a href="/" id="logo-home" title="Spotify">
+          <div class="h-12 flex justify-center items-center gap-3 lg:gap-0 text-4xl">
+            <a href="/" id="logo-home" class="w-12 h-12" title="Spotify">
               <i class="fa-brands fa-spotify"></i>
             </a>
+            <button
+                  id="home-mobile"
+                  class="lg:hidden flex px-1.5 py-2 cursor-pointer shrink-0 items-center justify-center rounded-full bg-background-card hover:bg-background-card-hover text-white hover:scale-105 transition duration-200 text-2xl"
+                >
+                  <i class="fa-solid fa-house pointer-events-none"></i>
+            </button>
+
+            <button type="button" id="search-mobile" title="Tìm kiếm"
+              class="flex lg:hidden size-10 justify-center items-center text-xl cursor-pointer rounded-full hover:bg-[#1f1f1f]">
+              <span><i class="fa-solid fa-magnifying-glass"></i></span>
+            </button>
           </div>
 
           <!-- active -->
           <div
-            class="-right-[350px] lg:flex fixed top-16 z-[1000] h-screen transition-all duration-300 lg:h-auto right-0 w-[350px] bg-[rgba(0,0,0,0.9)] p-4 lg:p-0 lg:static lg:w-auto"
+            class="fixed top-14 lg:top-auto z-[1000] h-[calc(100dvh-3.5rem)] lg:h-auto
+              w-[min(100vw,350px)] lg:w-auto
+              -right-[100%] lg:right-auto
+              bg-[rgba(0,0,0,0.95)] lg:bg-transparent
+              p-4 lg:p-0
+              transition-all duration-300 ease-out
+              lg:static lg:flex
+              overflow-y-auto lg:overflow-visible"
             id="content-left"
           >
             <div
@@ -45,7 +63,7 @@
               >
                 <button
                   id="home"
-                  class="flex h-12 w-12 cursor-pointer shrink-0 items-center justify-center rounded-full bg-background-card hover:bg-background-card-hover text-white hover:scale-105 transition duration-200 text-2xl"
+                  class="hidden lg:flex h-12 w-12 cursor-pointer shrink-0 lg:items-center lg:justify-center rounded-full bg-background-card hover:bg-background-card-hover text-white hover:scale-105 transition duration-200 text-2xl"
                 >
                   <i class="fa-solid fa-house pointer-events-none"></i>
                 </button>
@@ -922,7 +940,7 @@
       <!-- sign up -->
       <div
         id="signup-banner"
-        class="sign-up-free p-1.5 sm:p-2 fixed bottom-0 left-0 right-0 z-30"
+        class="sign-up-free p-1.5 sm:p-2 fixed bottom-[70px] sm:bottom-[80px] left-0 right-0 z-30"
       >
         <aside id="play-music">
           <div

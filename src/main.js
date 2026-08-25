@@ -72,6 +72,12 @@ document.querySelector("#home")?.addEventListener("click", (e) => {
   else location.href = "/";
 });
 
+document.querySelector("#home-mobile")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (typeof showHome === "function") showHome();
+  else location.href = "/";
+});
+
 // Phím tắt Ctrl + Shift + L để focus ô tìm kiếm
 document.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "l") {
@@ -103,7 +109,7 @@ const token = localStorage.getItem("access_token");
 if (token) {
   // Giao diện khi ĐÃ ĐĂNG NHẬP
   const contentLeft = document.querySelector("#content-left");
-  if (contentLeft) contentLeft.classList.remove("lg:flex-1")
+  if (contentLeft) contentLeft.classList.remove("lg:flex-1");
 
   if (actives) {
     actives.innerHTML = `
@@ -185,7 +191,7 @@ if (token) {
 } else {
   // Giao diện khi CHƯA ĐĂNG NHẬP
   const contentLeft = document.querySelector("#content-left");
-  if (contentLeft) contentLeft.classList.add("lg:flex-1")
+  if (contentLeft) contentLeft.classList.add("lg:flex-1");
 
   if (actives) {
     actives.innerHTML = `
@@ -816,7 +822,6 @@ document.querySelector("#logo-home").addEventListener("click", (e) => {
   window.location.href = "/";
 });
 
-
 // ===== CHUẨN HÓA TRACK TỪ API PLAYLIST =====
 // API /playlists/:id/tracks trả về: track_id, track_title, track_audio_url, track_image_url, track_duration
 // Code còn lại dùng: id, title, audio_url, image_url, duration
@@ -833,10 +838,7 @@ function normalizeTrack(t) {
     audio_url: secureAudio,
     duration: t.duration ?? t.track_duration ?? 0,
     image_url:
-      t.image_url ||
-      t.track_image_url ||
-      t.album_cover_image_url ||
-      "",
+      t.image_url || t.track_image_url || t.album_cover_image_url || "",
     artist_name: t.artist_name || "",
     album_cover_image_url:
       t.album_cover_image_url || t.track_image_url || t.image_url || "",
@@ -874,7 +876,12 @@ function renderTrackRows(tracks, showImg = true, options = {}) {
     </div>
     ${tracks
       .map((t, i) => {
-        const img = t.image_url || t.track_image_url || t.album_cover_image_url || t.artist_image_url || DEFAULT_IMAGE;
+        const img =
+          t.image_url ||
+          t.track_image_url ||
+          t.album_cover_image_url ||
+          t.artist_image_url ||
+          DEFAULT_IMAGE;
         const trackId = t.id || t.track_id;
         return `<div class="track-row grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 rounded-md hover:bg-[#ffffff1a] cursor-pointer group items-center"
           data-id="${trackId}"
@@ -907,32 +914,38 @@ function bindTrackRows(options = {}) {
   });
 
   // Double-click: xóa khỏi playlist (chỉ khi owner)
-  detailView?.querySelectorAll(".track-row[data-can-remove='1']").forEach((row) => {
-    row.addEventListener("dblclick", async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const trackId = row.dataset.id;
-      const playlistId = row.dataset.playlistId || options.playlistId;
-      if (!trackId || !playlistId) return;
+  detailView
+    ?.querySelectorAll(".track-row[data-can-remove='1']")
+    .forEach((row) => {
+      row.addEventListener("dblclick", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const trackId = row.dataset.id;
+        const playlistId = row.dataset.playlistId || options.playlistId;
+        if (!trackId || !playlistId) return;
 
-      const track = detailTrackList.find((x) => x.id === trackId || x.track_id === trackId);
-      const name = track?.title || track?.track_title || "bài hát này";
-      const ok = confirm(`Bạn có muốn xóa "${name}" khỏi playlist không?`);
-      if (!ok) return;
+        const track = detailTrackList.find(
+          (x) => x.id === trackId || x.track_id === trackId,
+        );
+        const name = track?.title || track?.track_title || "bài hát này";
+        const ok = confirm(`Bạn có muốn xóa "${name}" khỏi playlist không?`);
+        if (!ok) return;
 
-      try {
-        // DELETE /api/playlists/:playlistId/tracks/:trackId
-        await httpRequest.delete(`/api/playlists/${playlistId}/tracks/${trackId}`);
-        if (typeof renderPlaylistDetail === "function") {
-          await renderPlaylistDetail(playlistId);
-        } else {
-          row.remove();
+        try {
+          // DELETE /api/playlists/:playlistId/tracks/:trackId
+          await httpRequest.delete(
+            `/api/playlists/${playlistId}/tracks/${trackId}`,
+          );
+          if (typeof renderPlaylistDetail === "function") {
+            await renderPlaylistDetail(playlistId);
+          } else {
+            row.remove();
+          }
+        } catch (err) {
+          alert(err.message || "Không xóa được bài hát");
         }
-      } catch (err) {
-        alert(err.message || "Không xóa được bài hát");
-      }
+      });
     });
-  });
 }
 
 async function renderTrackDetail(id) {
@@ -1677,46 +1690,62 @@ setupSearchAPI();
   const btn = document.querySelector("#menu-bar");
   const icon = document.querySelector("#menu-bar-icon");
   const overlay = document.querySelector("#overlay");
+  const searchMobile = document.querySelector("#search-mobile");
+
+  function isMobile() {
+    return window.innerWidth < 1024;
+  }
 
   function setClosed() {
-    left?.classList.replace("right-0","-right-[350px]");
-    left?.classList.remove("flex");
+    if (!left) return;
+    left.classList.add("-right-[100%]");
+    left.classList.remove("right-0", "flex");
     overlay?.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
     if (icon) icon.innerHTML = '<i class="fa-solid fa-bars"></i>';
   }
+
   function setOpen() {
-    left?.classList.replace("-right-[350px]","right-0");
-    left?.classList.add("flex");
+    if (!left) return;
+    left.classList.remove("-right-[100%]");
+    left.classList.add("right-0", "flex");
     overlay?.classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
     if (icon) icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+  }
+
+  function isOpen() {
+    return left?.classList.contains("right-0");
   }
 
   btn?.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (left?.classList.contains("-right-[350px]")) setOpen();
-    else setClosed();
+    if (!isMobile()) return;
+    if (isOpen()) setClosed();
+    else setOpen();
   });
 
-  document.addEventListener("click", (e) => {
-    if (window.innerWidth >= 1024) return;
-    if (
-      left &&
-      !left.classList.contains("hidden") &&
-      !left.contains(e.target) &&
-      !btn?.contains(e.target)
-    ) {
-      setClosed();
-    }
+  // Nút search mobile: mở panel + focus ô search
+  searchMobile?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!isMobile()) return;
+    setOpen();
+    setTimeout(() => document.querySelector("#search")?.focus(), 320);
   });
+
+  overlay?.addEventListener("click", setClosed);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") setClosed();
   });
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth >= 1024) {
-      left?.classList.remove("hidden");
+    if (!isMobile()) {
+      // Desktop: panel luôn trong flow
+      left?.classList.remove("-right-[100%]", "right-0");
       left?.classList.add("flex");
+      overlay?.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
     } else {
       setClosed();
     }
@@ -1729,7 +1758,10 @@ setupSearchAPI();
   window.addEventListener("resize", () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      if (typeof renderLibrarySidebar === "function" && globalData?.artists?.length) {
+      if (
+        typeof renderLibrarySidebar === "function" &&
+        globalData?.artists?.length
+      ) {
         renderLibrarySidebar(globalData.artists);
       }
     }, 150);

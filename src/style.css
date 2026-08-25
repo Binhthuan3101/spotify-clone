@@ -12,29 +12,13 @@
 
 @layer base {
   body {
-    @apply bg-[var(--color-background-base)] text-[var(--color-foreground-base)] antialiased;
+    @apply bg-[var(--color-background-base)] text-[var(--color-foreground-base)];
   }
 }
 
-@layer components {
-  .card-item {
-    @apply snap-start;
-  }
-}
-
-
-/* Spotify-like collapsed library rail */
+/* Header panel mobile slide */
 @media (max-width: 1023px) {
-  #desktop-left .header-sidebar header {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+  #content-left.right-0 {
+    right: 0;
   }
-}
-
-
-#context-menu:not(.hidden) {
-  display: block;
-}
-#desktop-left {
-  overflow-x: visible;
 }
