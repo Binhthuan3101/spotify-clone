@@ -148,7 +148,7 @@ if (token) {
   if (premium) {
     premium.textContent = "Khám phá Premium";
     premium.className =
-      "text-black text-base font-bold w-fit py-1.5 px-4 bg-foreground-base rounded-full cursor-pointer hover:scale-105 transition-transform";
+      "block w-full text-foreground-accent text-left hover:text-foreground-base lg:text-black text-base font-bold lg:inline-block lg:w-fit lg:py-1.5 lg:px-4 lg:bg-foreground-base lg:rounded-full cursor-pointer lg:hover:scale-105 transition-transform";
   }
 
   support?.classList.add("hidden");
@@ -209,7 +209,7 @@ if (token) {
   if (premium) {
     premium.textContent = "Premium";
     premium.className =
-      "text-foreground-accent text-base font-bold hover:text-white cursor-pointer";
+      "text-left text-foreground-accent text-base font-bold hover:text-white cursor-pointer";
   }
 
   support?.classList.remove("hidden");
@@ -1506,82 +1506,203 @@ function setupPlayer() {
 }
 
 function setupSearchAPI() {
-  if (!searchText || !searchDropdown) return;
+  if (!searchText || !searchDropdown) {
+    console.warn("Search: missing #search or #search-dropdown");
+    return;
+  }
+
+  // Chặn submit form (Enter) reload trang
+  searchText.closest("form")?.addEventListener("submit", (e) => e.preventDefault());
+
+  const typeLabel = {
+    tracks: "Bài hát",
+    artists: "Nghệ sĩ",
+    albums: "Album",
+    playlists: "Playlist",
+  };
+
+  // Chuẩn hóa item từ API search (shape: title/subtitle/image_url)
+  const mapItem = (it, type) => {
+    const info = it.additional_info || {};
+    return {
+      id: it.id,
+      type,
+      name: it.title || it.name || "",
+      subtitle:
+        it.subtitle ||
+        info.artist_name ||
+        typeLabel[type] ||
+        type,
+      image:
+        it.image_url ||
+        it.cover_image_url ||
+        info.image_url ||
+        DEFAULT_IMAGE,
+    };
+  };
+
+  const renderSection = (title, items, type) => {
+    if (!items?.length) return "";
+    return `<div class="p-2">
+      <p class="text-xs font-bold text-foreground-accent px-2 mb-1">${title}</p>
+      ${items
+        .slice(0, 6)
+        .map((raw) => {
+          const it = mapItem(raw, type);
+          return `<button type="button" class="search-result w-full flex items-center gap-3 px-2 py-2 rounded hover:bg-[#3e3e3e] text-left text-white" data-type="${type}" data-id="${it.id}">
+            <img src="${it.image}" class="w-10 h-10 object-cover shrink-0 ${type === "artists" ? "rounded-full" : "rounded"}" onerror="this.src='${DEFAULT_IMAGE}'" />
+            <div class="min-w-0">
+              <p class="text-sm truncate">${it.name}</p>
+              <p class="text-xs text-foreground-accent truncate">${it.subtitle}</p>
+            </div>
+          </button>`;
+        })
+        .join("")}
+    </div>`;
+  };
+
+  const bindResultClicks = () => {
+    searchDropdown.querySelectorAll(".search-result").forEach((b) => {
+      b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        searchDropdown.classList.add("hidden");
+        openDetail(b.dataset.type, b.dataset.id);
+      });
+    });
+    searchDropdown.querySelectorAll(".trending-item").forEach((b) => {
+      b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        searchText.value = b.dataset.q || "";
+        doSearch(b.dataset.q || "");
+      });
+    });
+  };
+
   const showTrending = async () => {
+    searchDropdown.innerHTML = `<p class="p-4 text-sm text-foreground-accent">Đang tải gợi ý...</p>`;
+    searchDropdown.classList.remove("hidden");
     try {
       const res = await httpRequest.get(`/api/search/trending?limit=10`);
       const list = res.trending_searches || [];
       searchDropdown.innerHTML = list.length
         ? `<div class="p-3">
-        <p class="text-xs font-bold text-foreground-accent mb-2">Thịnh hành</p>
-          ${list
-            .map(
-              (
-                q,
-              ) => `<button class="trending-item w-full text-left px-3 py-2 rounded hover:bg-[#3a3a3a] text-sm text-foreground-base" data-q="${q}">
-          <i class="fa-solid fa-magnifying-glass mr-2 text-foreground-accent"></i>${q}
-        </button>`,
-            )
-            .join("")}
-      </div>
-      `
+            <p class="text-xs font-bold text-foreground-accent mb-2">Thịnh hành</p>
+            ${list
+              .map(
+                (q) => `<button type="button" class="trending-item w-full text-left px-3 py-2 rounded hover:bg-[#3a3a3a] text-sm text-foreground-base" data-q="${String(q).replace(/"/g, "&quot;")}">
+                  <i class="fa-solid fa-magnifying-glass mr-2 text-foreground-accent"></i>${q}
+                </button>`,
+              )
+              .join("")}
+          </div>`
         : `<p class="p-4 text-sm text-foreground-accent">Không có gợi ý</p>`;
-      searchDropdown.classList.remove("hidden");
-      searchDropdown.querySelectorAll(".trending-item").forEach((b) =>
-        b.addEventListener("click", () => {
-          searchText.value = b.dataset.q;
-          doSearch(b.dataset.q);
-        }),
-      );
-    } catch {}
+      bindResultClicks();
+    } catch (err) {
+      console.error("trending error", err);
+      searchDropdown.innerHTML = `<p class="p-4 text-sm text-foreground-accent">Không tải được gợi ý</p>`;
+    }
   };
+
+  // Fallback local khi API trống
+  const localSearch = (q) => {
+    const kw = q.toLowerCase();
+    const tracks = (globalData.tracks || [])
+      .filter(
+        (t) =>
+          t.title?.toLowerCase().includes(kw) ||
+          t.artist_name?.toLowerCase().includes(kw),
+      )
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        subtitle: t.artist_name || "Bài hát",
+        image_url: t.image_url || t.album_cover_image_url,
+      }));
+    const artists = (globalData.artists || [])
+      .filter((a) => a.name?.toLowerCase().includes(kw))
+      .map((a) => ({
+        id: a.id,
+        title: a.name,
+        subtitle: "Nghệ sĩ",
+        image_url: a.image_url,
+      }));
+    const albums = (globalData.albums || [])
+      .filter(
+        (a) =>
+          a.title?.toLowerCase().includes(kw) ||
+          a.artist_name?.toLowerCase().includes(kw),
+      )
+      .map((a) => ({
+        id: a.id,
+        title: a.title,
+        subtitle: a.artist_name || "Album",
+        image_url: a.cover_image_url,
+      }));
+    const playlists = (globalData.playlists || [])
+      .filter((p) => p.name?.toLowerCase().includes(kw))
+      .map((p) => ({
+        id: p.id,
+        title: p.name,
+        subtitle: p.user_display_name || "Playlist",
+        image_url: p.image_url,
+      }));
+    return { tracks, artists, albums, playlists };
+  };
+
   const doSearch = async (q) => {
-    if (!q.trim()) {
-      searchDropdown.classList.add("hidden");
+    q = (q || "").trim();
+    if (!q) {
+      showTrending();
       return;
     }
+
+    searchDropdown.innerHTML = `<p class="p-4 text-sm text-foreground-accent">Đang tìm “${q}”...</p>`;
+    searchDropdown.classList.remove("hidden");
+
+    let tracks = [];
+    let artists = [];
+    let albums = [];
+    let playlists = [];
+
     try {
       const res = await httpRequest.get(
         `/api/search?q=${encodeURIComponent(q)}&type=all&limit=10`,
       );
-      const tracks = res.tracks || res.data?.tracks || [];
-      const albums = res.albums || res.data?.albums || [];
-      const artists = res.artists || res.data?.artists || [];
-      const playlists = res.playlists || res.data?.playlists || [];
-      const sec = (title, items, type, nk, ik) => {
-        if (!items?.length) return "";
-        return `<div class="p-2"><p class="text-xs font-bold text-foreground-accent px-2 mb-1">${title}</p>
-          ${items
-            .slice(0, 5)
-            .map((it) => {
-              const name = it[nk] || it.name || it.title;
-              const img =
-                it[ik] || it.image_url || it.cover_image_url || DEFAULT_IMAGE;
-              return `<button class="search-result w-full flex items-center gap-3 px-2 py-2 rounded hover:bg-[#3e3e3e] text-left text-white" data-type="${type}" data-id="${it.id}">
-              <img src="${img}" class="w-10 h-10 object-cover ${type === "artists" ? "rounded-full" : "rounded"}" onerror="this.src='${DEFAULT_IMAGE}'" />
-              <div class="min-w-0"><p class="text-sm truncate">${name}</p><p class="text-xs text-foreground-accent">${type}</p></div></button>`;
-            })
-            .join("")}</div>`;
-      };
-      searchDropdown.innerHTML =
-        sec("Bài hát", tracks, "tracks", "title", "image_url") +
-          sec("Nghệ sĩ", artists, "artists", "name", "image_url") +
-          sec("Album", albums, "albums", "title", "cover_image_url") +
-          sec("Playlist", playlists, "playlists", "name", "image_url") ||
-        `<p class="p-4 text-sm text-foreground-accent">Không tìm thấy</p>`;
-      searchDropdown.classList.remove("hidden");
-      searchDropdown.querySelectorAll(".search-result").forEach((b) =>
-        b.addEventListener("click", () => {
-          searchDropdown.classList.add("hidden");
-          openDetail(b.dataset.type, b.dataset.id);
-        }),
-      );
+      // API shape: { results: { tracks, artists, albums, playlists } }
+      const bag = res.results || res.data || res;
+      tracks = bag.tracks || res.tracks || [];
+      artists = bag.artists || res.artists || [];
+      albums = bag.albums || res.albums || [];
+      playlists = bag.playlists || res.playlists || [];
     } catch (error) {
-      console.error(error);
+      console.error("search API error", error);
     }
+
+    // Nếu API rỗng → lọc local
+    if (!tracks.length && !artists.length && !albums.length && !playlists.length) {
+      const local = localSearch(q);
+      tracks = local.tracks;
+      artists = local.artists;
+      albums = local.albums;
+      playlists = local.playlists;
+    }
+
+    const html =
+      renderSection("Bài hát", tracks, "tracks") +
+      renderSection("Nghệ sĩ", artists, "artists") +
+      renderSection("Album", albums, "albums") +
+      renderSection("Playlist", playlists, "playlists");
+
+    searchDropdown.innerHTML =
+      html ||
+      `<p class="p-4 text-sm text-foreground-accent">Không tìm thấy kết quả cho “${q}”</p>`;
+    searchDropdown.classList.remove("hidden");
+    bindResultClicks();
   };
+
   searchText.addEventListener("focus", () => {
     if (!searchText.value.trim()) showTrending();
+    else doSearch(searchText.value.trim());
   });
 
   searchText.addEventListener("input", (e) => {
@@ -1590,13 +1711,22 @@ function setupSearchAPI() {
     searchDebounceTimer = setTimeout(() => {
       if (!q) showTrending();
       else doSearch(q);
-    }, 400);
+    }, 300);
   });
+
+  // Click ngoài mới ẩn (không ẩn khi click trong dropdown)
   document.addEventListener("click", (e) => {
-    if (!searchDropdown.contains(e.target) && e.target !== searchText) {
+    if (
+      !searchDropdown.contains(e.target) &&
+      e.target !== searchText &&
+      !searchText.contains(e.target)
+    ) {
       searchDropdown.classList.add("hidden");
     }
   });
+
+  // Giữ dropdown khi click bên trong
+  searchDropdown.addEventListener("click", (e) => e.stopPropagation());
 }
 
 async function createPlaylist() {
