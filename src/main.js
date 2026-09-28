@@ -195,11 +195,11 @@ if (token) {
 
   if (actives) {
     actives.innerHTML = `
-      <button id="register" class="block w-full text-left lg:w-fit text-sm font-bold py-2 lg:py-1 lg:pl-2 lg:pr-4 text-foreground-accent hover:text-white cursor-pointer">
+      <button id="register" class="block w-full text-left lg:w-fit text-base lg:text-sm font-bold py-2 lg:py-1 lg:pl-2 lg:pr-4 text-foreground-accent hover:text-white cursor-pointer">
         Đăng ký
       </button>
-      <button class="block w-full lg:w-fit cursor-pointer text-left" id="login">
-        <span class="inline-flex pointer-events-none text-sm justify-center items-center text-black font-bold py-2.5 px-6 bg-foreground-base rounded-full hover:scale-105 transition-transform">
+      <button class=" cursor-pointer text-left" id="login">
+        <span class="text-base lg:text-sm block lg:inline-flex pointer-events-none  justify-center items-center text-foreground-accent lg:text-black font-bold lg:py-2.5 lg:px-6 lg:bg-foreground-base rounded-full hover:scale-105 transition-transform">
           Đăng nhập
         </span>
       </button>
